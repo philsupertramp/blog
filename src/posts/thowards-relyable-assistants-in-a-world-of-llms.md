@@ -74,7 +74,15 @@ We can adjust the value of $a$ as visualized here
 
 ![parabular](https://upload.wikimedia.org/wikipedia/commons/4/4f/Concavity_of_a_parabola.gif)
 
+To some extent, we can say that this is one of the most simplistic mathematical model.
 
+Let's look at a geometrically easier, yet mathematically more complex example, a straight line.
+
+The definition of a line is given by
+$$
+y(X) = mx + t
+$$
+Imagine a 2D coordinate system from your time in school, then the parameter $m$
 
 
 ## General idea

@@ -1,0 +1,17 @@
+<!doctype html>
+<title>Post overview</title>
+<head>
+<link rel="apple-touch-icon" sizes="180x180" href="/_includes/assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/_includes/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/_includes/assets/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+  </head>
+  <body>
+    <h1>Phil's Blog</h1>
+    <h2>Posts</h2>
+    <ul>
+{%- for post in collections.post -%}
+    <li><a href="{{ post.page.url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date}})</li>
+{%- endfor -%}
+</ul>
+  </body>

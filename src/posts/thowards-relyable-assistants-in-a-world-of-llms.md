@@ -3,7 +3,6 @@ tags: post
 title: Thowards relyable assistants in a world of LLMs
 layout: mylayout.njk
 author: Philipp
-permalink: /blog/posts/{{ title | slugify }}
 date: 2024-03-24
 ---
 

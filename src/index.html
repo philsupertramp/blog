@@ -11,7 +11,7 @@
     <h2>Posts</h2>
     <ul>
 {%- for post in collections.post -%}
-    <li><a href="{{ post.page.url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date}})</li>
+    <li><a href="{{ post.page.url | url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date}})</li>
 {%- endfor -%}
 </ul>
   </body>

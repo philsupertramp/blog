@@ -7,6 +7,7 @@ module.exports = function(eleventyConfig) {
             includes: "_includes",
             input: "src",
             output: "docs"
-        }
+        },
+        pathPrefix: "/blog/"
     };
 };

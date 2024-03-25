@@ -42,6 +42,10 @@ Transformers have been applied to all sorts of tasks and seem to be state of the
 But they originated from the attempt of improving older architectures of machine translation models, while _trying out "translation excercises that learning English in my middle school invoved"_[[^1]](https://www.youtube.com/watch?v=XfpMkf4rD6E&t=1116s) with Recurrent Neural Networks (RNNs).
 
 ### What's an ML Model?
+> A quick note upfront. I will try to keep the math as low as possible. But there's no way around it. So buckle up and let's do this!
+
+
+
 There's by far not enough time now to cover this topic thoroughly.
 Generally speaking, a Machine Learning model is described through a (mostly) very very complex mathematic function that produces a desired output, let's call it $f$ for now.
 $f$ expects a certain kind of input, just like any other mathematical function.
@@ -61,7 +65,7 @@ This makes it obvious that $a$ and $b$ are the **inputs** of the pythagorean the
 
 Internally a model contains a specific amount of _parameters_.
 These parameters are combined using simple as well as complex mathematical operations, for example addition or multiplication.
-Recall for instance from your geometry lessons the fomula for a parabular, i.e. a simple quadratic function.
+Recall for instance from your geometry lessons the simplified fomula for a parabular centered in the origin $(0, 0)$ of a coordinate system.
 You probably got introduced to it in a similar form to
 $$
 y(x) = ax^2
@@ -75,15 +79,51 @@ We can adjust the value of $a$ as visualized here
 ![parabular](https://upload.wikimedia.org/wikipedia/commons/4/4f/Concavity_of_a_parabola.gif)
 
 To some extent, we can say that this is one of the most simplistic mathematical model.
+And even back then we applied methods of machine learning to solve math exercises!
+One way of Machine Learning algorithms to "learn" is to use an input and the expected/desired output for it.
 
-Let's look at a geometrically easier, yet mathematically more complex example, a straight line.
+
+A common task would be to determine $a$ given some $x$ and $y$.
+In this example we can do that "easily".
+Let's say we got $x= 4$ and $y=1$ then we can solve for $a$ like this
+$$
+1 = a \cdot(\sqrt{4})\\
+1 = a \cdot 2\\
+\frac{1}{2} = a
+$$
+Great, so for this it's required to solve a small equation and we get the correct value of $b$.
+
+
+Another form of the parabola formula is
+$$
+y(x) = ax^2 + c
+$$
+in the above example we used $c=0$.
+But $c$ is an important parameter to be able to describe a way bigger group of parabolas, because $c$ allows a shift of the center along the $y$-axis.
+You can see this in the following animation.
+
+ANIMATION 
+
+This makes two parameters that must be set into the formula before we can use the resulting function to calculate some results.
+And you can see that suddenly we have an even bigger range of possibilities.
+
+
+
+For closure, the full formula for the parabola is
+$$
+y(x) = ax^2 + bx +c
+$$
+but $b$ doesn't add too much visual value, so $c$ was better to make a point.
+Yet $b$ is another component to express an even wider range of functions.
+
+Similar to the difference between the very simplified version of this formula and the other two is the increased complexity in the expression as well as 
 
 The definition of a line is given by
 $$
-y(X) = mx + t
+y(x) = mx + t
 $$
-Imagine a 2D coordinate system from your time in school, then the parameter $m$
-
+where the parameter $m$ denotes the sloap of the line and $t$ the point on the $y$-axis where the line crosses it.
+Again the function expects a single input $x$ but this time
 
 ## General idea
 

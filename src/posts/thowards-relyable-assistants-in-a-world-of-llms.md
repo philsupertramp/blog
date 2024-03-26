@@ -132,6 +132,13 @@ y(x) = ax^2 + bx +c
 $$
 but $b$ doesn't add too much visual value, so $c$ was better to make a point.
 Yet $b$ is another component to express an even wider range of functions.
+For instance straight lines by setting $a=0$.
+
+Overall the variety of options of combinations that we CA chose for $a,b$ and $c$ is literally endless.
+
+Now consider the case of Large Language Models.
+Like earlier explained, these models const of millions or billions of parameters. These parameters are combined with way more advanced operations as simple additions and multiplications.
+
 
 Similar to the difference between the very simplified version of this formula and the other two is the increased complexity in the expression as well as 
 

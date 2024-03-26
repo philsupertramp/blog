@@ -80,18 +80,18 @@ We can adjust the value of $a$ as visualized here
 
 To some extent, we can say that this is one of the most simplistic mathematical model.
 And even back then we applied methods of machine learning to solve math exercises!
-One way of Machine Learning algorithms to "learn" is to use an input and the expected/desired output for it.
+One way of Machine Learning algorithms to "learn" is to use an input and the expected/desired output for it to determine the set of required parameters.
 
 
-A common task would be to determine $a$ given some $x$ and $y$.
+Back in school a common task was to determine $a$ given a combination of $x$ and $y$.
 In this example we can do that "easily".
-Let's say we got $x= 4$ and $y=1$ then we can solve for $a$ like this
+Let's say we got $x= 2$ and $y=1$ then we can solve for $a$ like this
 $$
-1 = a \cdot(\sqrt{4})\\
-1 = a \cdot 2\\
-\frac{1}{2} = a
+1 = a \cdot 2^2\\
+1 = a \cdot 4\\
+\frac{1}{4} = a
 $$
-Great, so for this it's required to solve a small equation and we get the correct value of $b$.
+Great, so for this it's required to solve a small equation to get the correct value of $b$.
 
 
 Another form of the parabola formula is
@@ -104,10 +104,27 @@ You can see this in the following animation.
 
 ANIMATION 
 
-This makes two parameters that must be set into the formula before we can use the resulting function to calculate some results.
-And you can see that suddenly we have an even bigger range of possibilities.
+This makes two parameters that must be determined and set into the formula before we can use the resulting function to calculate some results.
+You can probably see that suddenly we have an even bigger range of possibilities.
 
+In this example we wouldn't be able to determined the correct values of $a$ and $c$ with just a single pair of example input and output, but let's look into an example to manifest this.
+Let $x=2$ and $y=1$ be the first given pair.
+One approach could be to use this to solve for instance for $b$
+$$
+1 = a2^2 + b\\
+1 = a\cdot 4 +b\\
+b = -4a + 1
+$$
+Now inserting $b$ into the original formula
+$$
+1 = 4a + (-4a + 1)
+1 = 1
+$$
+Well, that didn't turn out as desired. It's a correct statement, but apart from that not very informative.
 
+No, the only way we can solve an equation with two unknown variables, i.e. $a$ and $c$, is to have two examples.
+
+Let $x_1=2$, $y_1= 1$, $x_2=3$ and $y_2=$
 
 For closure, the full formula for the parabola is
 $$

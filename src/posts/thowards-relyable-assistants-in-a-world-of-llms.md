@@ -42,7 +42,7 @@ Transformers have been applied to all sorts of tasks and seem to be state of the
 But they originated from the attempt of improving older architectures of machine translation models, while _trying out "translation excercises that learning English in my middle school invoved"_[[^1]](https://www.youtube.com/watch?v=XfpMkf4rD6E&t=1116s) with Recurrent Neural Networks (RNNs).
 
 ### What's an ML Model?
-> A quick note upfront. I will try to keep the math as low as possible. But there's no way around it. So buckle up and let's do this!
+> **A quick note upfront. I will try to keep the math as low as possible. But there's no way around it. So buckle up and let's do this!**
 
 
 
@@ -66,13 +66,15 @@ This makes it obvious that $a$ and $b$ are the **inputs** of the pythagorean the
 Internally a model contains a specific amount of _parameters_.
 These parameters are combined using simple as well as complex mathematical operations, for example addition or multiplication.
 Recall for instance from your geometry lessons the simplified fomula for a parabular centered in the origin $(0, 0)$ of a coordinate system.
-You probably got introduced to it in a similar form to
 $$
-y(x) = ax^2
+y(x) = a x^2
 $$
 Here $a$ is a fixed _parameter_ of the function $y$ and $x$ an **input**.
-A different vaslue of $a$ will yield (in most of the cases) different results for the same input $x$.
+A different value of $a$ will yield (in most of the cases) different results for the same input $x$.
 Like for all rules, there are some exceptions, but those aren't important now.
+
+We can adjust the value of $a$ as visualized here
+![parameterized line]({{ '/_includes/assets/parameterized-line.gif' | url }})
 
 We can adjust the value of $a$ as visualized here
 
@@ -87,9 +89,11 @@ Back in school a common task was to determine $a$ given a combination of $x$ and
 In this example we can do that "easily".
 Let's say we got $x= 2$ and $y=1$ then we can solve for $a$ like this
 $$
-1 = a \cdot 2^2\\
-1 = a \cdot 4\\
-\frac{1}{4} = a
+\begin{align}
+1 &= a \cdot 2^2\\\\
+1 &= a \cdot 4\\\\
+\frac{1}{4} &= a
+\end{align}
 $$
 Great, so for this it's required to solve a small equation to get the correct value of $b$.
 
@@ -111,16 +115,21 @@ In this example we wouldn't be able to determined the correct values of $a$ and 
 Let $x=2$ and $y=1$ be the first given pair.
 One approach could be to use this to solve for instance for $b$
 $$
-1 = a2^2 + b\\
-1 = a\cdot 4 +b\\
-b = -4a + 1
+\begin{align}
+1 &= a2^2 + c\\\\
+1 &= a\cdot 4 +c\\\\
+c &= -4a + 1
+\end{align}
 $$
-Now inserting $b$ into the original formula
+Now inserting $c$ into the original formula
 $$
-1 = 4a + (-4a + 1)
-1 = 1
+\begin{align}
+1 &= 4a + (-4a + 1)\\\\
+1 &= 1
+\end{align}
 $$
-Well, that didn't turn out as desired. It's a correct statement, but apart from that not very informative.
+Well, now we have a valid statement, but it didn't yield the desired parameter value. 
+It's a correct statement, but apart from that not very informative.
 
 No, the only way we can solve an equation with two unknown variables, i.e. $a$ and $c$, is to have two examples.
 

@@ -1,10 +1,14 @@
 ---
 tags: post
-title: Thowards relyable assistants in a world of LLMs (W.I.P.)
+title: Thowards relyable assistants in a world of LLMs (Part 1)
 layout: mylayout.njk
 author: Philipp
 date: 2024-03-24
 ---
+
+The purpose of this Multi-Part article is to introduce a novel approach for AI automation assistants as well as give an introduction to general machine learning to allow a broader audience to harvest this approach.
+
+Part 1 will introduce the reader to the subject matter, part 2 explain the novel routing approach.
 
 ## Introduction
 To constantly push back against novel technologies has been part of my life since many years.
@@ -28,7 +32,16 @@ We all know that. You decide to use some new piece of technology, face an issue,
 Of course not. And obviously you wouldn't have asked your if you did.
 
 This brings me to the actual topic of this article, the oh-so-brilliant all-fitting shoe called _Large Language Models_.
-But before we get into this, let's define some terms and quickly review some prerequisites before we get deeper into the topic of this article.
+
+Since late 2021 and the [introduction of ChatGPT]() there is a general rush towards building enormous, closed source, machine learning models to solve all sorts of tasks at the same time.
+
+Closed source means here that these algorithms aren't available to the public as source code/some sort of program code, but can be used by external parties via API (abstract programming interface), mostly in form of some web based technology.
+
+These algorithms/models supposedly can translate, summarise, restructure, rephrase or explain content or can come up with complete new stuff by themselves. Apart from that they can write program code, solve math problems generate music and can generate all sorts of other computer formats. (Todo: references)
+
+Now don't get me wrong, this sounds exciting! And in the same time futuristic, a little bit unbelievable.
+
+But before we get deeper into this, let's define some terms and quickly review some prerequisites before we get deeper into the topic.
 
 ### What are LLMs?
 Large Language Models (LLMs) are a form of machine learning models that are used to perform different tasks using natural language.
@@ -43,7 +56,6 @@ But they originated from the attempt of improving older architectures of machine
 
 ### What's an ML Model?
 > **A quick note upfront. I will try to keep the math as low as possible. But there's no way around it. So buckle up and let's do this!**
-
 
 
 There's by far not enough time now to cover this topic thoroughly.
@@ -65,29 +77,42 @@ This makes it obvious that $a$ and $b$ are the **inputs** of the pythagorean the
 
 Internally a model contains a specific amount of _parameters_.
 These parameters are combined using simple as well as complex mathematical operations, for example addition or multiplication.
-Recall for instance from your geometry lessons the simplified fomula for a parabular centered in the origin $(0, 0)$ of a coordinate system.
+Recall for instance from your geometry lessons the formula of a straight line through the center/origin of a 2D coordinate system
 $$
-y(x) = a x^2
+y(x) = a \cdot x
 $$
-Here $a$ is a fixed _parameter_ of the function $y$ and $x$ an **input**.
-A different value of $a$ will yield (in most of the cases) different results for the same input $x$.
-Like for all rules, there are some exceptions, but those aren't important now.
+here $y$ accepts the single input $x$ and has the parameter $a$ that must be determined before we can use $y(x)$.
 
-We can adjust the value of $a$ as visualized here
+Let's look at the possible outcomes of this and adjust the value of $a$ as visualized here
 ![parameterized line]({{ '/_includes/assets/parameterized-line.gif' | url }})
 
-We can adjust the value of $a$ as visualized here
+You can probably tell by this visualization that there are **many**, theoretically infinite, variations of this straight line.
+
+Next we look at a mathematically more complex example, the parabola. We begin with a simpler form, then add step by step more parameters to it.
+
+First we examine the simplified fomula for a parabola centered in the origin $(0, 0)$ of a coordinate system.
+$$
+y(x) = a\cdot x^2
+$$
+Here $a$ is a fixed _parameter_ of the function $y$ and $x$ an **input**. Similar to the line example.
+
+Again, a different value of $a$ will yield (in most of the cases) different results for the same input $x$.
+Like for all rules, there are some exceptions, but those aren't important now.
+
+We can change the value of $a$ as visualized here
 
 ![parabular](https://upload.wikimedia.org/wikipedia/commons/4/4f/Concavity_of_a_parabola.gif)
 
-To some extent, we can say that this is one of the most simplistic mathematical model.
-And even back then we applied methods of machine learning to solve math exercises!
+To some extent, we can say that this is one of the most simplistic mathematical models, same applies to the first example of the straight line.
+
 One way of Machine Learning algorithms to "learn" is to use an input and the expected/desired output for it to determine the set of required parameters.
 
+This is something that most of you probably did in math lessons during your time in school.
 
 Back in school a common task was to determine $a$ given a combination of $x$ and $y$.
-In this example we can do that "easily".
-Let's say we got $x= 2$ and $y=1$ then we can solve for $a$ like this
+In this example we can do that "easily" manual.
+
+Let's say we got $x= 2$ and $y=1$ then this form of the formula can be solved for $a$ like the following. Meaning we insert the provided values of $x$ and $y$, then move parts of the left and right side of the equation around until we get a solution for $a$,
 $$
 \begin{align}
 1 &= a \cdot 2^2\\\\
@@ -96,6 +121,7 @@ $$
 \end{align}
 $$
 Great, so for this it's required to solve a small equation to get the correct value of $b$.
+
 
 
 Another form of the parabola formula is
@@ -133,7 +159,27 @@ It's a correct statement, but apart from that not very informative.
 
 No, the only way we can solve an equation with two unknown variables, i.e. $a$ and $c$, is to have two examples.
 
-Let $x_1=2$, $y_1= 1$, $x_2=3$ and $y_2=$
+Let $x_1=2$, $y_1= 1$, $x_2=3$ and $y_2=$ this yields two equations from the original formula
+$$
+\begin{align}
+I:& y_1 = a\cdot x_1^2 + c \\\\
+II:& y_2 = a\cdot x_2^2 + c
+\end{align}
+$$
+with the values inserted
+$$
+\begin{align}
+I:& 1 = a\cdot 2^2 +c\\\\
+II:& y_2 = a\cdot 3^3 + c
+\end{align}
+$$
+A common approach to solve this is using the Gaussian algorithm.
+$$
+\begin{align}
+I:& 
+II:&
+\end{align}
+$$
 
 For closure, the full formula for the parabola is
 $$

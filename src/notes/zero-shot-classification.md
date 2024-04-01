@@ -46,7 +46,7 @@ But if we train the same model on an even larger corpus of text data, the perfor
 
 Alright, but let's assume we have a large enough corpus of text data and we want to pre-train a language model on it.
 
-For now, we'll use the infamous [IMDB dataset](https://www.imdb.com/interfaces/) as an example.
+For now, we'll use the famous [IMDB dataset](https://www.imdb.com/interfaces/) as an example.
 Just consider it as a placeholder for a large corpus of text data.
 
 To pre-train a language model, we can implement a transformer model using the [Hugging Face Transformers](https://huggingface.co/transformers/) library in Python.
@@ -98,7 +98,7 @@ model.save_pretrained('imdb-bert-mlm')
 tokenizer.save_pretrained('imdb-bert-mlm-tokenizer')
 ```
 **Note:** This code snippet trains a BERT model on the IMDB dataset using masked language modeling (MLM) as the pre-training task.
-The system requirement is around **7.5 GB** of RAM. The training process can take several hours to complete, on a colab without GPU support this would take around 30h to finish.
+The system requirement is around **7.5GB** of RAM. The training process can take several hours to complete, on a colab without GPU support this would take around 30h to finish.
 
 Cool, the model is now pre-trained on the IMDB dataset using masked language modeling.
 I have to stress here that even if we train this model on the whole data set and maybe even repeat this process for every single token inside it, we will still not be able to reproduce the quality of a larger scale operation.
@@ -122,7 +122,7 @@ from torch.utils.data import DataLoader
 
 class ClassificationModel(nn.Module):
   def __init__(self, model_name, num_labels):
-    super(ZeroShotModel, self).__init__()
+    super().__init__()
     self.model = BertForMaskedLM.from_pretrained(model_name)
     self.tokenizer = BertTokenizer.from_pretrained(model_name + '-tokenizer')
     self.classifier = nn.Linear(self.model.config.hidden_size, num_labels)
@@ -160,7 +160,7 @@ for epoch in range(3):
 
 torch.save(model.state_dict(), 'bert-classification_nli-3-samples')
 ```
-**Note:** This code snippet fine-tunes the pre-trained BERT model on the MultiNLI dataset for the zero-shot classification task. It is using 3 samples and trains on them over 3 epochs. It consumes **~3.7 GB** of RAM and takes a few seconds to execute.
+**Note:** This code snippet fine-tunes the pre-trained BERT model on the MultiNLI dataset for the zero-shot classification task. It is using 3 samples and trains on them over 3 epochs. It consumes **~3.7GB** of RAM and takes a few seconds to execute.
 
 After fine-tuning the model on the classification task, we can cut the classifier head and use the model for zero-shot classification tasks.
 
@@ -210,7 +210,7 @@ def show_results(samples, labels):
 
 show_results(samples, labels)
 ```
-**Note:** This code snippet defines a zero-shot classification model that uses the pre-trained BERT model fine-tuned on the MultiNLI dataset for the classification task. It then classifies the input text into one of the predefined categories using the cosine similarity between the input text and the category descriptions. The system requirement is around **2.2 GB** of RAM and can be executed in less then a second.
+**Note:** This code snippet defines a zero-shot classification model that uses the pre-trained BERT model fine-tuned on the MultiNLI dataset for the classification task. It then classifies the input text into one of the predefined categories using the cosine similarity between the input text and the category descriptions. The system requirement is around **2.2GB** of RAM and can be executed in less then a second.
 
 The output of this code snippet will be:
 ```text
@@ -276,7 +276,7 @@ sports: 0.016005270183086395
 entertainment: 0.008178026415407658
 ##################################################
 ```
-**Note:** This requires around **3.25 GB** of RAM and can be executed in a few seconds.
+**Note:** This requires around **3.25GB** of RAM and can be executed in a few seconds.
 
 ## Improving the zero-shot classification model
 One way to improve this model is to include a prompt template that provides additional context to the model.
@@ -343,6 +343,11 @@ Zero-shot classification is a powerful tool in the realm of Natural Language Pro
 
 I will continue to explore the possibilities of zero-shot classification and how it can be used to solve a wide range of tasks in the future.
 We will probably see more notes/posts on this topic in the future.
+The next little project will be to curate a mask language dataset and train a model on it.
+As well as to explore the possibilities of the here used model on a larger scale.
+
+I have an unused NVIDIA GPU (RTX 20xx with 6GB VRAM) and I'm thinking about using it for training a model on a larger scale.
+Maybe even to look into distributed training and how it can be used to train models on even larger datasets by using my desktop computer together with my laptop (RTX 4070 with 8GB VRAM)
 
 ## References
 - [AAAI](https://aaai.org/)

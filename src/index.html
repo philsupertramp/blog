@@ -1,17 +1,35 @@
 <!doctype html>
-<title>Post overview</title>
-<head>
-<link rel="apple-touch-icon" sizes="180x180" href="/_includes/assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/_includes/assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/_includes/assets/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ '/_includes/assets/apple-touch-icon.png' | url }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ '/_includes/assets/favicon-32x32.png' | url }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ '/_includes/assets/favicon-16x16.png' | url }}">
+    <link rel="manifest" href="{{ '/_includes/assets/site.webmanifest' | url }}">
+    <link rel="stylesheet" href="{{ '/_includes/assets/main.css' | url }}">
+    <style>.content{max-width: 1024px; margin: auto;}</style>
   </head>
   <body>
+    <div>
+      <div class="content">
     <h1>Phil's Blog</h1>
+    <hr/>
     <h2>Posts</h2>
     <ul>
-{%- for post in collections.post -%}
-    <li><a href="{{ post.page.url | url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date}})</li>
+{%- for post in collections.published_posts -%}
+    <li><a href="{{ post.page.url | url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date | postDate }})</li>
 {%- endfor -%}
 </ul>
+    <hr/>
+    <h2>Notes</h2>
+    <ul>
+{%- for post in collections.published_notes -%}
+    <li><a href="{{ post.page.url | url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date | postDate }})</li>
+{%- endfor -%}
+</ul>
+      </div>
+    </div>
   </body>
+</html>

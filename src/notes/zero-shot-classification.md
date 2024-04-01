@@ -34,6 +34,10 @@ The plan for a NLP zero-shot classification model is as follows:
 3. Evaluate the performance of the model on the zero-shot classification task and fine-tune further if necessary.
 
 It's as simple as that, just like any other machine learning model, the more data the better the performance.
+
+**Disclaimer:** This is a theoretical approach. I didn't have the resources to train a model on a large corpus of text data and actually try this whole approach and see if it's a feasible solution.
+In the future, I will try to train a model on a larger corpus of text data and see how well it performs on a zero-shot classification task.
+
 ## Pre-training a language model
 Almost all language models nowadays are trained using the same approach.
 The magic word here is _masked language modeling_.
@@ -110,9 +114,14 @@ The next step is to fine-tune the model on a zero-shot classification task.
 Actually, we don't really train for zero-shot classification, we just fine-tune the model on a classification task.
 The zero-shot part comes from the fact that we don't provide any training data for the classification task, we just provide descriptions of the categories and the text to be classified.
 
+To achieve classification, we add a classifier head on top of the pre-trained model and train it on a classification dataset.
+This _classifier head_ is a simple linear layer that takes the output of the pre-trained model and maps it to the number of classes in the classification task.
+
 In this example, we'll use the [MultiNLI dataset](https://www.nyu.edu/projects/bowman/multinli/) as the classification task, similar to [facebook/bart-large-mnli](https://huggingface.co/facebook/bart-large-mnli).
 In this dataset, the task is to classify a sentence pair into one of three categories: entailment, contradiction, or neutral.
 
+We will implement the classification model using the pre-trained BERT model and add this linear layer on top of it.
+Then we will fine-tune the resulting model on the MultiNLI dataset for the classification task.
 ```python
 import torch
 import copy
@@ -165,6 +174,8 @@ torch.save(model.state_dict(), 'bert-classification_nli-3-samples')
 
 After fine-tuning the model on the classification task, we can cut the classifier head and use the model for zero-shot classification tasks.
 
+We cut off the classifier head and reuse the reduced model for zero-shot classification tasks.
+This can be done by using the models output and the cosine similarity between the input text and the category descriptions.
 ```python
 import numpy as np
 
@@ -354,6 +365,6 @@ Maybe even to look into distributed training and how it can be used to train mod
 - [AAAI](https://aaai.org/)
 - [Joe Davison: Zero-Shot Learning in Modern NLP](https://joeddav.github.io/blog/2020/05/29/ZSL.html)
 - [Hugging Face Transformers](https://huggingface.co/transformers/)
-- [Hugging Face Zero-Shot-Classification](https://huggingface.co/tasks/zero-shot)
+- [Hugging Face Zero-Shot-Classification](https://huggingface.co/tasks/zero-shot-classification)
 - [Paper: Zero-Shot Learning - A Comprehensive Evaluation of the Good, the Bad and the Ugly](https://arxiv.org/pdf/1707.00600.pdf)
 

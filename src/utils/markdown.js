@@ -18,7 +18,10 @@ markdown.renderer.rules.image = function (tokens, idx, options, env, self) {
     console.log(imgSrc);
   }
   if (imgSrc.endsWith('.gif')) {
-    return `<img src="${imgSrc}" alt="${imgAlt}" title="${imgAlt}" width=auto>`
+    console.log('Is GIF', imgSrc);
+    var imgOut = `<img src="${imgSrc}" alt="${imgAlt}" title="${imgAlt}" width=auto>`
+
+    return figure(imgOut, imgAlt)
   }
 
   const parsed = (imgTitle || '').match(

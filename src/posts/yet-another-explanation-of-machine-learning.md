@@ -1,14 +1,16 @@
 ---
-tags: post
-title: Thowards relyable assistants in a world of LLMs (Part 1)
+tags:
+- post
+- draft
+permalink: false
+title: Yet Another Explanation of Machine Learning
 layout: mylayout.njk
 author: Philipp
-date: 2024-03-24
 ---
 
 The purpose of this Multi-Part article is to introduce a novel approach for AI automation assistants as well as give an introduction to general machine learning to allow a broader audience to harvest this approach.
 
-Part 1 will introduce the reader to the subject matter, part 2 explain the novel routing approach.
+Part 1 will introduce the reader to the subject matter, part 2 explain a novel approach.
 
 ## Introduction
 To constantly push back against novel technologies has been part of my life since many years.
@@ -33,11 +35,12 @@ Of course not. And obviously you wouldn't have asked your if you did.
 
 This brings me to the actual topic of this article, the oh-so-brilliant all-fitting shoe called _Large Language Models_.
 
-Since late 2021 and the [introduction of ChatGPT]() there is a general rush towards building enormous, closed source, machine learning models to solve all sorts of tasks at the same time.
+Since late 2021 and the [introduction of ChatGPT](https://openai.com/blog/chatgpt) there is a general rush towards building enormous, closed source, machine learning models to solve all sorts of tasks at the same time.
 
 Closed source means here that these algorithms aren't available to the public as source code/some sort of program code, but can be used by external parties via API (abstract programming interface), mostly in form of some web based technology.
 
-These algorithms/models supposedly can translate, summarise, restructure, rephrase or explain content or can come up with complete new stuff by themselves. Apart from that they can write program code, solve math problems generate music and can generate all sorts of other computer formats. (Todo: references)
+These algorithms/models supposedly can translate, summarise, restructure, rephrase or explain content or can come up with complete new stuff by themselves. Apart from that they can write program code, solve math problems generate music and can generate all sorts of [other computer formats](https://arxiv.org/abs/2303.08774).
+Recently (September 2023) in the case of ChatGPT, OpenAI announced that their algorithm is able to process and understand not only natural language but [also images and audio data](https://openai.com/blog/chatgpt-can-now-see-hear-and-speak).
 
 Now don't get me wrong, this sounds exciting! And in the same time futuristic, a little bit unbelievable.
 
@@ -50,7 +53,7 @@ In my opinion the definition of the cut between "normal" sized models and "large
 Similarily to the term _deep_ in deep learning introduced by [Yann LeCun et. al](https://doi.org/10.1038/nature14539).
 As a rule of thumb I consider anything beyond $10^8$ (100M) parameters "large".
 
-The more or less origin of this type of language models is the **Transformer** architecture, introduced 2017 by the famous paper "_Attention Is All You Need_" [Vasvani et. al](https://arxiv.org/abs/1706.03762).
+The more or less origin of this type of language models is the **Transformer** architecture, introduced 2017 by the famous paper "_Attention Is All You Need_" by [Vasvani et. al](https://arxiv.org/abs/1706.03762).
 Transformers have been applied to all sorts of tasks and seem to be state of the art (SotA) for a vast amount of use cases, e.g. computer vision (["_An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale_"](https://arxiv.org/abs/2010.11929)).
 But they originated from the attempt of improving older architectures of machine translation models, while _trying out "translation excercises that learning English in my middle school invoved"_[[^1]](https://www.youtube.com/watch?v=XfpMkf4rD6E&t=1116s) with Recurrent Neural Networks (RNNs).
 
@@ -101,7 +104,8 @@ Like for all rules, there are some exceptions, but those aren't important now.
 
 We can change the value of $a$ as visualized here
 
-![parabular](https://upload.wikimedia.org/wikipedia/commons/4/4f/Concavity_of_a_parabola.gif)
+![parameterized line]({{ '/_includes/assets/parameterized-parabola.gif' | url }})
+
 
 To some extent, we can say that this is one of the most simplistic mathematical models, same applies to the first example of the straight line.
 
@@ -159,27 +163,47 @@ It's a correct statement, but apart from that not very informative.
 
 No, the only way we can solve an equation with two unknown variables, i.e. $a$ and $c$, is to have two examples.
 
-Let $x_1=2$, $y_1= 1$, $x_2=3$ and $y_2=$ this yields two equations from the original formula
+Let $x_1=2$, $y_1= 2$, $x_2=3$ and $y_2=3.25 = \frac{13}{4}$ this yields two equations from the original formula
 $$
 \begin{align}
-I:& y_1 = a\cdot x_1^2 + c \\\\
-II:& y_2 = a\cdot x_2^2 + c
+I:&\\; y_1 = a\cdot x_1^2 + c \\\\
+II:&\\; y_2 = a\cdot x_2^2 + c
 \end{align}
 $$
 with the values inserted
 $$
 \begin{align}
-I:& 1 = a\cdot 2^2 +c\\\\
-II:& y_2 = a\cdot 3^3 + c
+I:&\\; 2 = a\cdot 2^2 +c = a\cdot 4 + c\\\\
+II:&\\; 3.25 = a\cdot 3^3 + c = a\cdot 9 + c
 \end{align}
 $$
 A common approach to solve this is using the Gaussian algorithm.
+First we subtract the first equation from the second
 $$
 \begin{align}
-I:& 
-II:&
+III = I - II:&\\; 2-3.25 = -5a \\\\
+\Leftrightarrow&\\; -1.25 = -5a
 \end{align}
 $$
+Now we divide the left side by $-5$ to get the value of $a$
+$$
+\begin{align}
+IV = III \cdot \left(\frac{-1}{5}\right):&\\; \frac{-1.25}{-5} = a \\\\
+\Leftrightarrow&\\; a = 0.25 = \frac{1}{4}
+\end{align}
+$$
+Finally we insert the value of $a$ into the first equation to get the value of $c$
+$$
+\begin{align}
+V = I(a):&\\; 2 = \frac{1}{4} \cdot 4 + c \\\\
+\Leftrightarrow&\\; 2 = 1 + c\\\\
+\Rightarrow&\\; c = 1
+\end{align}
+$$
+Great, so the parameters $a=0.25$ and $c=1$ are determined and we can use the formula to calculate the value of $y$ for any given $x$.
+
+As you can imagine, this is a very simplified example of how a machine learning model learns.
+And with increasing amount of parameters and complexity of the model, the more examples are required to determine the correct values of these parameters.
 
 For closure, the full formula for the parabola is
 $$
@@ -189,20 +213,90 @@ but $b$ doesn't add too much visual value, so $c$ was better to make a point.
 Yet $b$ is another component to express an even wider range of functions.
 For instance straight lines by setting $a=0$.
 
-Overall the variety of options of combinations that we CA chose for $a,b$ and $c$ is literally endless.
+Overall the variety of options of combinations that we can chose for $a,b$ and $c$ is literally endless.
 
 Now consider the case of Large Language Models.
-Like earlier explained, these models const of millions or billions of parameters. These parameters are combined with way more advanced operations as simple additions and multiplications.
+Like earlier explained, these models const of millions or billions of parameters.
+These parameters are combined with way more advanced operations as simple additions and multiplications.
+
+Similar to the difference between the very simplified version of this parabola formula and the other two more complex variants is the increased complexity in the expression as well as the computational amount of work required to determine the best fitting parameters.
+
+This brings up the question of how to determine the correct values of these parameters, how to combine them and how to use them to get the desired output.
+
+To motivate this a little bit more, let's look at another aspect of machine learning, statistics.
+
+## How decisions are made
+Statistics is a field of mathematics that is used to determine the probability of certain events to happen.
+Due to the fact that Machine Learning models are mathematical representations of a certain problem which uses mathematical operations to determine the correct values of the parameters, statistics is a very important part of this field.
+Especially when it comes to makeing decisions.
+
+These decisions can be as simple as determining the correct value of a parameter, like in the parabola example, or as complex as determining the correct output of a model given a certain input.
+Overall, the goal of machine learning models is to make correct decisions based on the input data and it does so by using the parameters that were determined during the learning phase.
+
+Similar to the human nature, we can build models that are able to learn from examples and make decisions based on these examples.
 
 
-Similar to the difference between the very simplified version of this formula and the other two is the increased complexity in the expression as well as 
+Let's say we want for instance to build a language model that is able to predict new words while typing a text.
+Basically an auto-completion feature for a text editor.
 
-The definition of a line is given by
+If you type "`How is the wea`" the model should be able to predict the next word, which in this case is "`weather`".
+
+We can achieve this, by using a very simple model that is able to predict the next word based on the previous words.
+For this we introduce the concept of _Probability_, more specific the [_Conditional Probability_](https://en.wikipedia.org/wiki/Conditional_probability).
+
+The regular probability of an event $A$ is defined as
 $$
-y(x) = mx + t
+P(A) = \frac{\text{number of times } A \text{ occured}}{\text{number of all events}}
 $$
-where the parameter $m$ denotes the sloap of the line and $t$ the point on the $y$-axis where the line crosses it.
-Again the function expects a single input $x$ but this time
+
+So for instance the probability of a dice showing a 6 (or any other number) is
+$$
+P(6) = \frac{1}{6}
+$$
+
+The conditional probability of an event $A$ occuring given an event $B$ occured already is defined as
+$$
+P(A|B) = \frac{P(A \cap B)}{P(B)}
+$$
+$P(A \cap B)$ is the probability of both events $A$ and $B$ occuring at the same time, basically the probability of $A$ multiplied by the probability of $B$.
+
+As an example, let's say we roll a dice twice and we want to know the probability of the second roll showing a 6 given the first roll showed a 6
+$$
+P(6|6) = \frac{P(6 \cap 6)}{P(6)} = \frac{1/36}{1/6} = \frac{1}{6}
+$$
+And the result makes sense, because the probability of a dice showing a 6 is always $\frac{1}{6}$, no matter how many times we roll the dice. The results of the rolls are more or less independent.
+
+Language on the other hand is a little bit different.
+Words are not independent of each other and don't appear randomly.
+There are certain rules and structures that define how words are used in a sentence.
+And this is where the Conditional Probability comes into play.
+We can use the Conditional Probability to determine the probability of a word occuring given the previous words.
+
+For instance, let's say we have the sentence "`How is the weather`".
+The probability of the word "`weather`" occuring given the previous word "`the`" is
+$$
+\begin{align}
+P(\text{weather}|\text{the}) &= \frac{P(\text{weather} \cap \text{the})}{P(\text{the})}\\\\
+&= \frac{\frac{1}{4} \cdot \frac{1}{4}}{\frac{1}{4}} = \frac{1}{4}
+\end{align}
+$$
+Ok, so in this case the probability of the word "`weather`" occuring given the previous word "`the`" is $0.25$, but so is the probability for all other words to occur.
+This is due to the fact that `the` and `weather` are always used together in this sentence.
+So we must look at a bigger context to determine the correct probability.
+Consider the extended example with the following sentences
+```text
+How is the weather
+Where is the bookshop
+Who are you
+```
+Now we can determine the probability of the word "`weather`" occuring given the previous word "`the`" as
+$$
+\begin{align}
+P(\text{weather}|\text{the}) &= \frac{P(\text{weather} \cap \text{the})}{P(\text{the})}\\\\
+&= \frac{\frac{1}{11} \cdot \frac{2}{11}}{\frac{2}{11}} = \frac{1}{11}
+\end{align}
+$$
+
 
 ## General idea
 

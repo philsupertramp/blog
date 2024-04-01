@@ -5,6 +5,7 @@ tags:
 title: Zero-Shot-Classification
 layout: mylayout.njk
 author: Philipp
+description: A brief look into Zero-Shot-Classification for natural language processing.
 date: 2024-04-01
 ---
 Zero-shot-classification is a task in the realm of Natural Language Processing (NLP) that aims to classify text into predefined categories without any training data.

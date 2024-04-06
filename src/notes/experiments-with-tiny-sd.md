@@ -63,7 +63,6 @@ After collecting 29 samples from an artist, I adjusted the [dreambooth](https://
 I set a learning rate of `1e-4` and trained it over 1.5k iterations.
 
 After the training the script automatically uploads the model to the hub.
-I wrapped it into a space for demo purposes.
 
 **Note:** you need to use the "_magic phrase_" `... by JON_JUAREZ ...` to trigger the LoRA.
 
@@ -92,16 +91,32 @@ Prompt: `Landscape`
 ![image(16)](https://github.com/philsupertramp/blog/assets/9550040/d505075b-7d76-422f-a970-e34bb2d872c1)
 
 
-
 Prompt: `Landscape by JON& JUAREZ`
 
 ![image(17)](https://github.com/philsupertramp/blog/assets/9550040/b7f88629-d81f-498e-972d-888b8c6e5fd5)
 
 
+One of the greatest findings of all of this is...
 
-You can try my LoRA here
+![8lul76](https://github.com/philsupertramp/blog/assets/9550040/563823e1-932a-4daf-97af-69657d831b3e)
+
+Even your toaster has more!
+And we're talking training, not inference. 
+
+For inference it's less than 1GB.
+
+I wrapped the LoRA into a 🤗 hugging face space, you can find it below
+
+## Outlook
+Apart from training a LoRA on a set of style examples, [this Reddit post](https://www.reddit.com/r/StableDiffusion/s/vm1JxWTCEY) suggests to use them as class examples, potentially as `style`.
+
+And then we can continue with [LoRA merging](https://huggingface.co/docs/diffusers/en/using-diffusers/merge_loras).
+Infinite variations and possibilities are ahead us.
 
 
+## Demo
+
+Keep in mind to include `by JON_JUAREZ` inro your prompt.
 
 <iframe
 	src="https://philipp-zettl-philipp-zettl-jon-juarez-lora.hf.space"

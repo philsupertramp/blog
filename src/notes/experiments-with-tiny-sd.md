@@ -58,14 +58,14 @@ That's nice! I wonder how far I can go with this.
 Because of that I felt obliged to train a LoRA to maybe improve the style of generated paintings.
 
 ## LoRA training
-After collecting 29 samples from an artist, I adjusted the [dreambooth]() script that I used for my [logo-lora]() for training of tiny-sd.
+After collecting 29 samples from an artist, I adjusted the [dreambooth]() script that I used for my logo-LoRA for training of tiny-sd.
 
 I set a learning rate of `1e-4` and trained it over 1.5k iterations.
 
 After the training the script automatically uploads the model to the hub.
 I wrapped it into a space for demo purposes.
 
-The "_magic phrase_" to trigger the LoRA is `... by JON_JUAREZ ...`.
+**Note:** you need to use the "_magic phrase_" `... by JON_JUAREZ ...` to trigger the LoRA.
 
 Here are some results:
 

@@ -12,7 +12,7 @@ Since over a year I'm on the hunt for lightweight architectures and models for g
 
 Now recently I've trained a LoRA for stable diffusion XL (SDXL) on a [logo dataset](https://huggingface.co/dataset/logo-wizard/modern-logo-dataset) and published it on [hugging face 🤗](https://huggingface.co/philipp-zettl/logo_LoRA).
 
-But this LoRA requires to run [SDXL]() as a base model.
+But this LoRA requires to run [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) as a base model.
 Which is quite big and barely fits onto any of my GPUs.
 The only option I have is CPU offloading.
 
@@ -44,7 +44,7 @@ I'm wondering if we can achieve something else maybe I should just try something
 
 For instance cartoons and cartoon-like pictures/paintings.
 
-Recently I found the artist []() through a post on mastodon.
+Recently I found the artist [Jon Juarez](https://lama.co/harriorrihar/) through a post on mastodon.
 And I really like their work!
 
 So I wanted to try out if I can generate something similar to their work :)
@@ -58,7 +58,7 @@ That's nice! I wonder how far I can go with this.
 Because of that I felt obliged to train a LoRA to maybe improve the style of generated paintings.
 
 ## LoRA training
-After collecting 29 samples from an artist, I adjusted the [dreambooth]() script that I used for my logo-LoRA for training of tiny-sd.
+After collecting 29 samples from an artist, I adjusted the [dreambooth](https://dreambooth.github.io/) script that I used for my logo-LoRA for training of tiny-sd.
 
 I set a learning rate of `1e-4` and trained it over 1.5k iterations.
 

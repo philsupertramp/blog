@@ -1,4 +1,13 @@
-
+---
+tags:
+ - note
+ - published
+title: Experiments with tiny-sd
+layout: mylayout.njk
+author: Philipp
+description: My findings after discovering segmind/tiny-sd. Including fine-tuning attempts.
+date: 2024-04-07
+---
 
 ## Initial attempts
 After discovering the distilled diffusion models by segmind I've tried out my casual trial prompts.

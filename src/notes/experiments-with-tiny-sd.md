@@ -39,14 +39,33 @@ Prompt: `Super Mario sitting in private jet lounge and smoking a big joint with 
 
 ![d7b6cb50-737f-4924-a303-5b20495933d0](https://github.com/philsupertramp/blog/assets/9550040/993bd24e-df8d-4a46-8de3-60e44fb05b9c)
 
+Well, frankly apart from the fluffy ball the results are rather mediocre.
+I'm wondering if we can achieve something else maybe I should just try something _easier_.
+
+For instance cartoons and cartoon-like pictures/paintings.
+
+Recently I found the artist []() through a post on mastodon.
+And I really like their work!
+
+So I wanted to try out if I can generate something similar to their work :)
+
+Prompt: `painting with line shading of a cave`
+
+![25f3b1a6-a68c-424f-9af5-101252f5edeb](https://github.com/philsupertramp/blog/assets/9550040/eb5d143e-c0a5-4953-a089-315520a46cd8)
+
+That's nice! I wonder how far I can go with this.
+
+Because of that I felt obliged to train a LoRA to maybe improve the style of generated paintings.
 
 ## LoRA training
-After collecting 29 samples from an artist I've found a few days ago, I adjusted the [dreambooth]() script that I used for my [logo-lora]() for training of tiny-sd.
+After collecting 29 samples from an artist, I adjusted the [dreambooth]() script that I used for my [logo-lora]() for training of tiny-sd.
 
 I set a learning rate of `1e-4` and trained it over 1.5k iterations.
 
 After the training the script automatically uploads the model to the hub.
 I wrapped it into a space for demo purposes.
+
+The "_magic phrase_" to trigger the LoRA is `... by JON_JUAREZ ...`.
 
 Here are some results:
 

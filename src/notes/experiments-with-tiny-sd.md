@@ -8,6 +8,17 @@ author: Philipp
 description: My findings after discovering segmind/tiny-sd. Including fine-tuning attempts.
 date: 2024-04-07
 ---
+Since over a year I'm on the hunt for lightweight architectures and models for generative AI that I can run on my mid-end consumer hardware (GTX 2060 6GB VRAM/GTX 3040 8 GB VRAM).
+
+Now recently I've trained a LoRA for stable diffusion XL (SDXL) on a [logo dataset](https://huggingface.co/dataset/logo-wizard/modern-logo-dataset) and published it on [hugging face 🤗](https://huggingface.co/philipp-zettl/logo_LoRA).
+
+But this LoRA requires to run [SDXL]() as a base model.
+Which is quite big and barely fits onto any of my GPUs.
+The only option I have is CPU offloading.
+
+But that comes with a great speed decrease.
+
+So I desperately wanted to find a smaller model!
 
 ## Initial attempts
 After discovering the distilled diffusion models by segmind I've tried out my casual trial prompts.

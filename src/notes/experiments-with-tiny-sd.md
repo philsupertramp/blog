@@ -48,6 +48,36 @@ I set a learning rate of `1e-4` and trained it over 1.5k iterations.
 After the training the script automatically uploads the model to the hub.
 I wrapped it into a space for demo purposes.
 
+Here are some results:
+
+Prompt: `Pastel color painting with line shading by JON_JUAREZ of a dark cave`
+
+![image (3)](https://github.com/philsupertramp/blog/assets/9550040/d2764b2d-554e-4bf2-89ff-5a383de73cfe)
+
+Prompt: `Painting with line shading by JON_JUAREZ of a dark cave`
+
+![image (1)](https://github.com/philsupertramp/blog/assets/9550040/b41befc7-08dc-4342-8f1f-629db83abb09)
+
+Prompt: `Wizard`
+
+![image(15)](https://github.com/philsupertramp/blog/assets/9550040/67b77e20-5d82-4c51-b673-b9749711c3ed)
+
+
+Prompt: `Wizard by JON_JUAREZ`
+
+![image(14)](https://github.com/philsupertramp/blog/assets/9550040/bc98d6e8-f3a1-4fa4-92fd-89d2887e5eb6)
+
+
+Prompt: `Landscape`
+
+![image(16)](https://github.com/philsupertramp/blog/assets/9550040/d505075b-7d76-422f-a970-e34bb2d872c1)
+
+
+
+Prompt: `Landscape by JON& JUAREZ`
+
+![image(17)](https://github.com/philsupertramp/blog/assets/9550040/b7f88629-d81f-498e-972d-888b8c6e5fd5)
+
 
 
 You can try my LoRA here

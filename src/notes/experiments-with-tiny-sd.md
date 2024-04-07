@@ -118,12 +118,7 @@ Infinite variations and possibilities are ahead us.
 
 Keep in mind to include `by JON_JUAREZ` inro your prompt.
 
-<iframe
-	src="https://philipp-zettl-philipp-zettl-jon-juarez-lora.hf.space"
-	frameborder="0"
-	width="850"
-	height="450"
-></iframe>
+<iframe src="https://philipp-zettl-philipp-zettl-jon-juarez-lora.hf.space" frameborder="0" width="850" height="450"></iframe>
 
 
 

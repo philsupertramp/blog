@@ -8,6 +8,14 @@ author: Philipp
 description: My findings after discovering segmind/tiny-sd. Including fine-tuning attempts.
 date: 2024-04-07
 ---
+<script
+	type="module"	src="https://gradio.s3-us-west-2.amazonaws.com/4.25.0/gradio.js"
+></script>
+
+
+
+
+
 Since over a year I'm on the hunt for lightweight architectures and models for generative AI that I can run on my mid-end consumer hardware (GTX 2060 6GB VRAM/GTX 3040 8 GB VRAM).
 
 Now recently I've trained a LoRA for stable diffusion XL (SDXL) on a [logo dataset](https://huggingface.co/dataset/logo-wizard/modern-logo-dataset) and published it on [hugging face 🤗](https://huggingface.co/philipp-zettl/logo_LoRA).
@@ -118,14 +126,6 @@ Infinite variations and possibilities are ahead us.
 
 Keep in mind to include `by JON_JUAREZ` inro your prompt.
 
-<iframe src="https://philipp-zettl-philipp-zettl-jon-juarez-lora.hf.space" frameborder="0" width="850" height="450"></iframe>
 
-
-
-
-
-
-
-
-
+<gradio-app src="https://philipp-zettl-philipp-zettl-jon-juarez-lora.hf.space"></gradio-app>
 

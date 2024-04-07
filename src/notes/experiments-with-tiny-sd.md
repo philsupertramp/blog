@@ -21,7 +21,7 @@ But that comes with a great speed decrease.
 So I desperately wanted to find a smaller model!
 
 ## Initial attempts
-After discovering the distilled diffusion models by segmind I've tried out my casual trial prompts.
+After discovering the [distilled diffusion models](https://huggingface.co/blog/sd_distillation) by segmind I've tried out my casual trial prompts.
 
 Here are the first results each with the default parameters via the inference UI:
 

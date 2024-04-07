@@ -1,6 +1,7 @@
 const Image = require('@11ty/eleventy-img')
-const markdown = require('markdown-it')()
-
+const markdown = require('markdown-it')({
+  html: true
+});
 markdown.renderer.rules.image = function (tokens, idx, options, env, self) {
   function figure(html, caption) {
     return `<figure>${html}<figcaption>${caption}</figcaption></figure>`

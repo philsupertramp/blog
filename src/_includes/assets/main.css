@@ -8,8 +8,10 @@ figure {
 }
 
 img {
-  margin: auto;
+  margin: auto 25% auto;
   max-width: 50%;
+  border-radius: 5px;
+  height: auto;
 }
 
 hr {

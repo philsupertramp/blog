@@ -14,6 +14,7 @@ module.exports = function(eleventyConfig) {
     });
 
     eleventyConfig.addPassthroughCopy("src/_includes/assets/*");
+    eleventyConfig.addPassthroughCopy("src/_includes/assets/2024-04-14/*");
 
     eleventyConfig.addPlugin(mathjaxPlugin, {
       processEscapes: false,

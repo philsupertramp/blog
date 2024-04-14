@@ -3,13 +3,39 @@
   margin: auto;
 }
 
-figure {
-  display: flex;
-}
 
 img {
-  margin: auto;
+  margin: auto 25% auto;
   max-width: 50%;
+  border-radius: 5px;
+  height: auto;
+}
+
+figure {
+  
+  padding: 4px;
+  margin: auto;
+  border-radius: 15px;
+}
+figcaption {
+  color: #555;
+  font-style: italic;
+  padding: 2px;
+  text-align: center;
+}
+
+.img-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.img-list > p {
+  display: none;
+}
+.img-list > figure > picture > img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  margin: auto;
 }
 
 hr {

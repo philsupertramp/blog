@@ -197,7 +197,7 @@ Apart from this, we also need to use a noise scheduler, which is a `DDIMSchedule
 
 You can find a diagram of the pipeline here:
 
-<img src="https://github.com/tencent-ailab/IP-Adapter/blob/685b550ed2fe34ee3f747b51d2d3d520052f49e5/assets/figs/fig1.png?raw=true" width="75%" height="auto" style="max-width: 75%; margin: auto 12.5% auto"/>
+<img src="https://github.com/tencent-ailab/IP-Adapter/blob/685b550ed2fe34ee3f747b51d2d3d520052f49e5/assets/figs/fig1.png?raw=true" width="75%" height="auto" style="max-width: 75%; margin: auto 12.5% auto; width: 75%"/>
 
 Once we have the pipeline set up, we can generate new images by running the following code:
 
@@ -245,7 +245,7 @@ The resulting face still ensambles the features of the input image, but the face
 
 Here's an example for the prompt "`professional photo of a blond woman in short black dress reading a book"` with different values for `s_scale` from left to right in descending order.
 
-<img src="{{ '/_includes/assets/2024-04-14/thispersondoesnotexist-sscale.png' | url }}" style="max-width: 80%; margin: auto 10% auto" />
+<img src="{{ '/_includes/assets/2024-04-14/thispersondoesnotexist-sscale.png' | url }}" style="max-width: 80%; margin: auto 10% auto; width: 80%" />
 
 Sweet, so we have now a bunch of new images of our protagonist. Time to generate some more high class portraits!
 
@@ -356,6 +356,77 @@ I guess I have my solution for portrait generation now.
 If once we're able to use other models than SD 1.5, this will be an even bigger game changer.
 
 But apart from this, I'm quite happy with the results and the ease of use of this pipeline.
+
+## Update
+I couldn't hold myself and needed to look further into IP-Adapter.
+
+Here's a small look into more applications.
+
+
+![Input image]({{ '/_includes/assets/2024-04-14/woman.png' | url }})
+
+#### Variations without prompt
+
+<div class="img-list">
+
+![ ]({{ '/_includes/assets/2024-04-14/woman-variations-0.png' | url }})
+![ ]({{ '/_includes/assets/2024-04-14/woman-variations-1.png' | url }})
+![ ]({{ '/_includes/assets/2024-04-14/woman-variations-2.png' | url }})
+![ ]({{ '/_includes/assets/2024-04-14/woman-variations-3.png' | url }})
+
+</div>
+
+#### Variations with prompt
+For my wifu lovers, here's a small treat
+
+Prompt: `"best quality, high quality, ahegao, big breasts, too small bikini, wearing a hat on the beach"`
+
+<div class="img-list">
+
+![ ]({{ '/_includes/assets/2024-04-14/woman-ahegao-0.png' | url }})
+![ ]({{ '/_includes/assets/2024-04-14/woman-ahegao-1.png' | url }})
+![ ]({{ '/_includes/assets/2024-04-14/woman-ahegao-2.png' | url }})
+![ ]({{ '/_includes/assets/2024-04-14/woman-ahegao-3.png' | url }})
+
+</div>
+
+Again, I couldn't stop myself and wanted to explore more.
+
+Is it possible to generate images of other things, apart from people?
+
+For instance, let's say I have this product, a soda can, and I want to generate images of it in different situations.
+
+![Product image of a soft drink]({{ '/_includes/assets/2024-04-14/product-image.jpeg' | url }})
+
+Running the same pipeline as before to generate variations of the input image, yields the following results.
+
+<div class="img-list">
+
+![ ]({{ '/_includes/assets/2024-04-14/product-images-0.png' | url }})
+![ ]({{ '/_includes/assets/2024-04-14/product-images-1.png' | url }})
+![ ]({{ '/_includes/assets/2024-04-14/product-images-2.png' | url }})
+![ ]({{ '/_includes/assets/2024-04-14/product-images-3.png' | url }})
+
+</div>
+
+As you can see we get a bunch of cans on tables, similar to the input image.
+
+What happens if we throw in a prompt?
+
+Using prompt: `"best quality, high quality, in a bowl of ice"`
+
+<div class="img-list">
+
+![ ]({{ '/_includes/assets/2024-04-14/product-images-prompt-0.png' | url }})
+![ ]({{ '/_includes/assets/2024-04-14/product-images-prompt-1.png' | url }})
+![ ]({{ '/_includes/assets/2024-04-14/product-images-prompt-2.png' | url }})
+![ ]({{ '/_includes/assets/2024-04-14/product-images-prompt-3.png' | url }})
+
+</div>
+
+Hmpf, that's pretty bad. But I guess that's not the model's fault, but rather the fact that the model is not trained on such data and it's more intended to resemble human faces and poses, not all sorts of items.
+
+You can find a setup for this experiment in the official [IP-Adapter repository](https://github.com/tencent-ailab/IP-Adapter/blob/main/ip_adapter_demo.ipynb).
 
 ## References
 - [IP-Adapter webpage](https://ip-adapter.github.io/)

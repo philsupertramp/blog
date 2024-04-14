@@ -26,7 +26,7 @@ markdown.renderer.rules.image = function (tokens, idx, options, env, self) {
   }
 
   const parsed = (imgTitle || '').match(
-    /^(?<skip>@skip(?:\[(?<width>\d+)x(?<height>\d+)\])? ?)?(?:\?\[(?<sizes>.*?)\] ?)?(?<caption>.*)/
+    /^(?<skip>@skip(?:\[(?<width>[\d%px]+)x(?<height>[\d%dx]+)\])? ?)?(?:\?\[(?<sizes>.*?)\] ?)?(?<caption>.*)/
   ).groups
 
   parsed.caption = parsed.caption.trim() || imgAlt
@@ -37,7 +37,8 @@ markdown.renderer.rules.image = function (tokens, idx, options, env, self) {
       options.sizes = parsed.sizes
     }
 
-    const metadata = { jpeg: [{ url: imgSrc }] }
+    
+    const metadata = { jpeg: [{ url: imgSrc.replace('src/_includes/assets/', '/blog/_includes/assets/') }] }
     if (parsed.width && parsed.height) {
       metadata.jpeg[0].width = parsed.width
       metadata.jpeg[0].height = parsed.height

@@ -29,6 +29,8 @@ markdown.renderer.rules.image = function (tokens, idx, options, env, self) {
     /^(?<skip>@skip(?:\[(?<width>\d+)x(?<height>\d+)\])? ?)?(?:\?\[(?<sizes>.*?)\] ?)?(?<caption>.*)/
   ).groups
 
+  parsed.caption = parsed.caption.trim() || imgAlt
+
   if (parsed.skip || imgSrc.startsWith('http')) {
     const options = { ...htmlOpts }
     if (parsed.sizes) {

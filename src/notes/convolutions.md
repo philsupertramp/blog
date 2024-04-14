@@ -1,6 +1,7 @@
 ---
 tags:
  - note
+permalink: false
 title: Convolutions
 layout: mylayout.njk
 author: Philipp

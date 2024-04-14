@@ -60,7 +60,7 @@ The first thing I've looked into was `IP-Adapter-FaceID-Portrait`, according to 
 
 > _IP-Adapter-FaceID-Portrait: same with IP-Adapter-FaceID but for portrait generation (no lora! no controlnet!). Specifically, it accepts multiple facial images to enhance similarity (the default is 5)._
 
-Perfect, exactly what I was looking for. I wanted to generate images of Margot Robbie in a red dress.
+Perfect, exactly what I was looking for. I wanted to generate images of Margot Robbie in a black dress.
 So I went to google images, spent 2 minutes collecting a bunch of nice looking portraits of her and started the inference.
 
 Input images:
@@ -69,8 +69,8 @@ Input images:
 
 Once the features of these portraits are extracted, I can use them to generate new images of Margot Robbie in different situations.
 
-For instance I could generate some images of her in a red dress, standing in a garden. I used this example, because it makes the application quite obvious.
-We didn't include any picture of her in a red dress, so the model doesn't have any information about how she looks in a red dress. But it should be able to generate a picture of her in a red dress, based on the other images.
+For instance I could generate some images of her in a black dress. I used this example, because it makes the application quite obvious.
+We didn't include any picture of her in a black dress, so the model doesn't have any information about how she looks in different clothing. But it should be able to generate a picture of her in any kind of dress, in any color and any situation, based on the other images.
 
 
 > Prompt: `professional photoshoot full body portrait of a woman in a short black dress`

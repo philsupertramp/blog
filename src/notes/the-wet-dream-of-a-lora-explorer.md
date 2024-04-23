@@ -9,7 +9,7 @@ description: My journey with text-to-image generation models continues. This wee
 date: 2024-04-13
 ---
 
-This week I started off with training yet another LoRA model for another based model, [segmind/SSD-1B](https://huggingface.co/segmind/SSD-1B). 
+This week I started off with training yet another LoRA model for another base model, [segmind/SSD-1B](https://huggingface.co/segmind/SSD-1B). 
 I was excited to see how the model would perform, considering it is based on SDXL, not as tiny-sd and small-sd based on the older SD-1.5.  
 My experience with SDXL has been quite positive so far, so I was looking forward to seeing how the model would perform.
 
@@ -119,7 +119,7 @@ With that being said we can start our journey.
 Initially, I had to install the dependencies, which are not listed, but by trial and error I found out that I needed to install the following packages:
 
 ```shell
-pip install opencv-python insightface onxruntime ip-adapterv einops torch torchvision diffusers Pillow
+pip install opencv-python insightface onnxruntime ip-adapterv einops torch torchvision diffusers Pillow
 ```
 
 Now due to the fact that we only have 1 image of our protagonist, we need to generate a few more.

@@ -12,6 +12,9 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addFilter("postDate", (dateObj) => {
       return DateTime.fromJSDate(dateObj).toLocaleString(DateTime.DATE_MED);
     });
+    eleventyConfig.addFilter("notesUrl", (slug) => {
+      return `/blog/notes/${slug}/`;
+    });
 
     eleventyConfig.addPassthroughCopy("src/_includes/assets/*");
     eleventyConfig.addPassthroughCopy("src/_includes/assets/2024-04-14/*");

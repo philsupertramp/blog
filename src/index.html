@@ -15,8 +15,15 @@
     <div>
       <div class="content">
     <h1>Phil's Blog</h1>
+    <p>Hi, I'm Phil, a software engineer, self proclaimed and certified mathematician and this is my blog. Here you can find some of my thoughts, projects, tutorials and notes about software development, computer science and other stuff.</p>
+    <hr/>
+    <h2>Publications</h2>
+    <ul>
+      <li><a href="https://github.com/philsupertramp/inet">Machine Learning Methods for Localization and Classification of Insects in Images (B.Sc. Thesis)</a> (Philipp @ 01 Apr 2022)</li>
+    </ul>
     <hr/>
     <h2>Posts</h2>
+    <h3>Here you can find my long-form posts, where I try to explain things in a more detailed way. Contains tutorials, project description, algorithms and theoretical content.</h3>
     <ul>
 {%- for post in collections.published_posts -%}
     <li><a href="{{ post.page.url | url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date | postDate }})</li>

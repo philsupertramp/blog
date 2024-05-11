@@ -13,7 +13,7 @@ module.exports = function(eleventyConfig) {
       return DateTime.fromJSDate(dateObj).toLocaleString(DateTime.DATE_MED);
     });
     eleventyConfig.addFilter("notesUrl", (slug) => {
-      return `/blog/notes/${slug}/`;
+      return `/notes/${slug}/`;
     });
 
     eleventyConfig.addPassthroughCopy("src/_includes/assets/*");
@@ -53,6 +53,6 @@ module.exports = function(eleventyConfig) {
             input: "src",
             output: "docs"
         },
-        pathPrefix: "/blog/"
+        pathPrefix: ""
     };
 };

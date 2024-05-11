@@ -15,7 +15,7 @@ markdown.renderer.rules.image = function (tokens, idx, options, env, self) {
   const htmlOpts = { alt: imgAlt, loading: 'lazy', decoding: 'async' }
 
   if (imgSrc.startsWith('/') && !imgSrc.endsWith('.gif')) {
-    imgSrc = imgSrc.replace('/blog/_includes/assets/', 'src/_includes/assets/')
+    imgSrc = imgSrc.replace('/_includes/assets/', 'src/_includes/assets/')
     console.log(imgSrc);
   }
   if (imgSrc.endsWith('.gif')) {
@@ -38,7 +38,7 @@ markdown.renderer.rules.image = function (tokens, idx, options, env, self) {
     }
 
     
-    const metadata = { jpeg: [{ url: imgSrc.replace('src/_includes/assets/', '/blog/_includes/assets/') }] }
+    const metadata = { jpeg: [{ url: imgSrc.replace('src/_includes/assets/', '/_includes/assets/') }] }
     if (parsed.width && parsed.height) {
       metadata.jpeg[0].width = parsed.width
       metadata.jpeg[0].height = parsed.height
@@ -58,7 +58,7 @@ markdown.renderer.rules.image = function (tokens, idx, options, env, self) {
       .concat(widths.map((w) => w * 2)) // generate 2x sizes
       .filter((v, i, s) => s.indexOf(v) === i), // dedupe
     formats: ['webp', 'jpeg', 'png'], // TODO: add avif when support is good enough
-    urlPath: '/blog/_include/assets/',
+    urlPath: '/_include/assets/',
     outputDir: './docs/_include/assets/'
   }
 

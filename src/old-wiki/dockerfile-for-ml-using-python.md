@@ -21,7 +21,7 @@ So without any further ado, take a look at the following examples, one using pla
 ## PIP
 
 ```dockerfile
-FROM python:3.10-alpine
+FROM python:3.12-alpine
 
 RUN apk update \
   && apk add --virtual .build-deps \
@@ -40,7 +40,7 @@ COPY . /code/
 
 ## POETRY
 ```dockerfile
-FROM python:3.10-alpine
+FROM python:3.12-alpine
 
 ARG GH_TOKEN
 

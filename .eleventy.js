@@ -35,6 +35,12 @@ module.exports = function(eleventyConfig) {
 			return collectionApi.getFilteredByTags("post", "published").reverse();
 		}
 	);
+	eleventyConfig.addCollection(
+		"old_posts",
+		function (collectionApi) {
+			return collectionApi.getFilteredByTags("old-wiki", "published").reverse().concat(collectionApi.getFilteredByTags('old-blog', 'published').reverse());
+		}
+	);
 
   
 	eleventyConfig.addPlugin(directoryOutputPlugin, {

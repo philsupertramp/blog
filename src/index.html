@@ -26,18 +26,26 @@
     <h3>Here you can find my long-form posts, where I try to explain things in a more detailed way. Contains tutorials, project description, algorithms and theoretical content.</h3>
     <ul>
 {%- for post in collections.published_posts -%}
-    <li><a href="{{ post.page.url | url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date | postDate }})</li>
+      <li><a href="{{ post.page.url | url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date | postDate }})</li>
 {%- endfor -%}
-</ul>
+    </ul>
     <hr/>
     <h2>Notes</h2>
     <h3>A collection of short notes and thoughts, take it with a grain of salt and do your own god damn research!</h3>
     <h4>Also, I'm not a native English speaker, so there might be some grammar mistakes. If you find them, good for you :-)</h4>
     <ul>
 {%- for post in collections.published_notes -%}
-    <li><a href="{{ post.page.url | url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date | postDate }})</li>
+      <li><a href="{{ post.page.url | url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date | postDate }})</li>
 {%- endfor -%}
-</ul>
+    </ul>
+    <hr/>
+    <h2>Old Posts</h2>
+    <h3>Here you can find my old posts, which are not up to date anymore, but might still be interesting to read. Media content or links might be broken.</h3>
+    <ul>
+{%- for post in collections.old_posts -%}
+      <li><a href="{{ post.page.url | url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date | postDate }})</li>
+{%- endfor -%}
+    </ul>
       </div>
     </div>
   </body>

@@ -202,8 +202,13 @@ class MultiHeadSequenceClassificationPipeline:
       return lambda texts: self.predict(texts, head_names=[head_name])
     return super().__getattr__(item)
 ```
+The `predict` method is the main method of the pipeline. It takes a list of texts, tokenizes them, and passes them through the model. This is straight-forward.
 
-This can be used for instance like this:
+For convenience reasons we also implemented a `__getattr__` method that allows to access individual heads of the model by calling `predict_{head_name}`, e.g. `predict_sentiment`.
+
+**Note**: When using the `__getattr__` method, **only the labels of the desired head are computed**. Apart from that the head names have to be provided in the `label_maps` dictionary.
+
+This pipeline then can be used for instance like this:
 
 ```python
 >>> model_conf = {

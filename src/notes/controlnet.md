@@ -300,8 +300,7 @@ def pred(prompt, negative_prompt, controlnet_conditioning_scale, guidance_scale,
     
     print("Generating QR Code from content")
     qrcode_image = create_code(qr_code_content, "black")
-   generator = torch.manual_seed(seed) if seed != -1 else torch.Generator()
-     
+
     out = pipe(
         prompt=prompt,
         negative_prompt=negative_prompt,
@@ -317,7 +316,7 @@ def pred(prompt, negative_prompt, controlnet_conditioning_scale, guidance_scale,
 ```
 
 This can yield some pretty cool results, like the ones above or the following:
-```
+```python
 qr_code_content = "https://blog.godesteem.de/notes/zero-shot-classification/"
 prompt = "a white castle, floating boulder in the sky, studio ghibli"
 negative_prompt = "ugly, disfigured, low quality, blurry, blend shapes"

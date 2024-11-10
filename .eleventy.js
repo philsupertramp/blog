@@ -22,7 +22,12 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addPlugin(mathjaxPlugin, {
       processEscapes: false,
   });
-
+ eleventyConfig.addCollection(
+		"published",
+		function (collectionApi) {
+			return collectionApi.getFilteredByTags("published").reverse();
+		}
+	);
 	eleventyConfig.addCollection(
 		"published_notes",
 		function (collectionApi) {

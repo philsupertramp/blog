@@ -1,3 +1,14 @@
+---
+tags:
+ - post
+permalink: false
+title: The Other Hat
+layout: mylayout.njk
+author: Philipp
+date: 2025-01-15
+---
+
+
 In the end of last year the company I'm working for was going through a transitional period in which we needed to recreate our infrastructure on a second set of accounts for each product.
 
 Of course, instead of creating two new environments to host the two applications, we cut down one and created a second.

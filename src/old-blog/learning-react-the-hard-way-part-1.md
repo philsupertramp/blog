@@ -121,7 +121,7 @@ Imagine this:
 
 1347 search results. Ha! Easy choice, right?  
 
-In the next post ([Learning React(JS) the hard way Part 2](/old-blog/learning-react-js-the-hard-way-part-2)) 
+In the next post ([Learning React(JS) the hard way Part 2](/old-blog/learning-react-the-hard-way-part-2)) 
 I will introduce you to my personal package hell and how I started to learn the *real* ReactJS, not JS like today.
 <div><img src="https://media.giphy.com/media/aq23msctvnd4Y/giphy.gif" style="width: 90%; margin-left: 5%"/></div><br/>
 

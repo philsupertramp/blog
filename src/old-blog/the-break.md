@@ -24,7 +24,7 @@ time. Hence I will present you a short FAQ – even though no one seriously aske
 Sorry, I know that and it's been a hard time for me, too.  
 I needed to 
 - [x] find a new flat
-- [x] end the professional relationship with the person I mentioned within (at least) my [first Post of the series](/old-blog/learning-react-js-the-hard-way-part-1)
+- [x] end the professional relationship with the person I mentioned within (at least) my [first Post of the series](/old-blog/learning-react-the-hard-way-part-1)
 - [x] study for several exams
 - [x] move into the new flat
 - [ ] and over and all earn serious fucking money to afford furniture 

@@ -13,7 +13,7 @@ layout: mylayout.njk
 
 _Hey friend, this is the second part of my small series about me getting introduced to JS._
 
- - _If you're here by accident and actually wanted to read the whole story [click here](/learning-react-js-the-hard-way-part-1)._  
+ - _If you're here by accident and actually wanted to read the whole story [click here](/old-blog/learning-react-js-the-hard-way-part-1)._  
  - _If you're just interested in my first impression of React and you don't actually care about the background, keep on reading._
  - <a style="text-decoration: none; cursor: text" target="_blank" href="/images/r2-d2-c-3po-best-friends-wallpaper-5478.jpg"><i>These</i></a> _are definitely not the druids you are looking for._
 
@@ -37,7 +37,7 @@ attributes like `left` instead of a `margin-left`, or chose `order` because the 
 
 <div><img src="https://media.giphy.com/media/O7FZoSMAgF9f2/giphy.gif" style="width: 90%; margin-left: 5%"/></div>
 
-Anyway I didn't refuse the offer and started learning JavaScript – as mentioned in [my last post](/learning-react-js-the-hard-way-part-1).
+Anyway I didn't refuse the offer and started learning JavaScript – as mentioned in [my last post](/old-blog/learning-react-js-the-hard-way-part-1).
 
 
 
@@ -62,7 +62,7 @@ But today I'm here to tell you something about my experience with JavaScript and
 
 After reading through several topics of "[The Modern JavaScript Tutorial](https://javascript.info/)", scripting a few things 
 aaaaaaaaand the beautiful support through the fantastic [Tutorial: Intro to React](https://reactjs.org/tutorial) I felt 
-wise enough to start writing my first small page using react and [nextJS]() for SSR support. I also needed to set up an
+wise enough to start writing my first small page using react and [nextJS](https://nextjs.org/) for SSR support. I also needed to set up an
 express server to achieve SSR support. The schema is a bit different to regular React because of nextjs, but I guess 
 you'll get the gist, since I got it. ;)
 
@@ -225,7 +225,7 @@ Reusable Com... Com...
 
 ## Reusable Components
 Sorry again friend, I need to postpone the topic about packages and libraries for Post #3 
-[Learning React(JS) the hard way Part 3](/learning-react-js-the-hard-way-part-3). If you like reading so far and want to
+[Learning React(JS) the hard way Part 3](/old-blog/learning-react-js-the-hard-way-part-3). If you like reading so far and want to
 give me nice feedback hit me per <a href="mailto:phil@godesteem.de">Mail</a> or try to contact me in other known ways.
 
 <div><img src="https://media.giphy.com/media/l4FAYTEssy5ux9zlm/giphy.gif" style="width: 90%; margin-left: 5%"/></div>

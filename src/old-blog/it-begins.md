@@ -59,7 +59,7 @@ My immediate thought was how awesome the idea is, that it needs to be super easy
 
 ## From here
 Thanks for reading so far, partner!
-During the next weeks I will tell the story of my journey of [Learning React the hard way](/learning-react-js-the-hard-way-part-1), 
+During the next weeks I will tell the story of my journey of [Learning React the hard way](/old-blog/learning-react-js-the-hard-way-part-1), 
 [Who needs planning if you have an idea]() and [How I stopped quitting]().
 
 <div><img src="https://media.giphy.com/media/xT4uQgeBiqqIg5Nzry/giphy.gif" style="width: 45%; margin-left: 25%"/></div>

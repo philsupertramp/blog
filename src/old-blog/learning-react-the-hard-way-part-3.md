@@ -33,7 +33,7 @@ React is currently one hell of a popular library for the programming language Ja
 React calls itself _"A JavaScript library for building user interfaces"_. And at least in my opinion it does a good job 
 doing that! During the last weeks I was trying to find reasons not to like JavaScript and React. But every time I open my 
 IDE and code for some time, I experience new and awesome stuff which helps me to improve me and my products. Since you're hopefully here since my
-[first post](/learning-react-js-the-hard-way-part-1) in this "series", you may caught up some sarcastic or ironic vibe.
+[first post](/old-blog/learning-react-js-the-hard-way-part-1) in this "series", you may caught up some sarcastic or ironic vibe.
 Sorry about that, pal. I'll try to keep it to a minimum **amount**.
 
 <div><img src="https://media.giphy.com/media/TKWteu8wW5PTayafmj/giphy.gif" style="width: 90%; margin-left: 5%;margin-bottom: 5rem"/></div>
@@ -104,7 +104,7 @@ Doing research for my script turned out to be a perfect example and my entrance 
 >just search for a package at npmjs.org
 <div><img src="https://media.giphy.com/media/12pMNuLbibieaY/giphy.gif" style="width: 90%; margin-left: 5%;margin-bottom: 5rem"/></div>
 
-As mentioned in my [first post](/learning-react-js-the-hard-way-part-1), a search for the packages related to the keyword "time"
+As mentioned in my [first post](/old-blog/learning-react-js-the-hard-way-part-1), a search for the packages related to the keyword "time"
 on 12th of May 2019, 24 day before today (26th May 2019), hit 13470 results. Today, we're at 13597.
 
 ![Search results for "time"]({{ '/_includes/assets/old_blog/post-4-time.png' | url }})
@@ -129,7 +129,7 @@ But that was just the beginning.
 #### Sorry, buddy
 
 Again the time is over.. As every week I thank you for reading my post, I hope you enjoyed it!  
-_Catch you on a flip flop_. See you in [part 4](/learning-react-js-the-hard-way-part-4)! 
+_Catch you on a flip flop_. See you in [part 4](/old-blog/learning-react-js-the-hard-way-part-4)! 
 <div><img src="https://media.giphy.com/media/hs8SqOYWARxO8/giphy.gif" style="width: 90%; margin-left: 5%;margin-bottom: 5rem"/></div>
 Enjoy your weekend
 

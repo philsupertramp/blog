@@ -64,7 +64,7 @@ Or would you maybe start tearing apart a plane during flight just because you wa
 
 I know this scenario isn't as real as mine, I just wanted to put you in the same position in which I was not that long ago.
 
->>For those of you who read since [post No. 1](/learing-react-js-the-hard-way-part-1):
+>>For those of you who read since [post No. 1](/old-blog/learing-react-js-the-hard-way-part-1):
 >>>I know I mentioned in the previous posts that I am working with next-js, so the date calculation could
 take part during the cycle of rendering on server side. The following is just an example, which I still feel more
 comfortable about than using a huge 3rd party package. I can test and adjust the functionality as I want. This
@@ -304,7 +304,7 @@ and I am really excited for each visitor on my page.
 
 For all of you who are into security and the fact that even in the "free web" you are watched by everyone, I totally get
 the point of protecting your own privacy. This page uses – as you can see within it's code – Google Analytics. 
-(For more information check out the [privacy page](/datenschutz)). Which will be 
+(For more information check out the [privacy page]()). Which will be 
 one of the topic of one of my future posts. But maybe in a way you don't know it yet. 	(̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄
 
 Next week I will continue creating the small date library to get finally rid of 50% of the size of my app! Incredible un-zipped 200kB.

@@ -21,7 +21,7 @@ module.exports = function(eleventyConfig) {
 
     eleventyConfig.addPlugin(mathjaxPlugin, {
       tex: {
-        processEscapes: false,
+        processEscapes: true,
       }
     });
     eleventyConfig.addCollection(

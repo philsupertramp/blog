@@ -98,51 +98,25 @@ import torch
 from torch.nn import functional as F
 
 
-weight = lambda inp, hid: nn.Parameter(torch.zeros(inp, hid))
-bias = lambda hid: nn.Parameter(torch.ones(hid))
+param = lambda shape, factor: nn.Parameter(torch.randn(*shape) * factor)
 
 
 class RNNCell(nn.Module):
     def __init__(self, input_dim, hidden_size):
         super().__init__()
-        self.w_aa = weight(input_dim, hidden_size)
-        self.w_ax = weight(input_dim, hidden_size)
-        self.w_ya = weight(input_dim, hidden_size)
-        self.b_a = bias(hidden_size)
-        self.b_y = bias(hidden_size)
+        self.w_aa = param([input_dim, hidden_size], 0.1)
+        self.w_ax = param([input_dim, hidden_size], 0.1)
+        self.w_ya = param([input_dim, hidden_size], 0.1)
+        self.b_a = param([hidden_size], 0.0)
+        self.b_y = param([hidden_size], 0.0)
 
         self.g_1 = F.tanh
         self.g_2 = F.tanh
 
-    def forward(self, x):
-        a, x = x
-
-        aw = a * self.w_aa
-        xw = x * self.w_ax
-
-        axb = aw + xw + self.b_a
-        gaxb = self.g_1(axb)
-        gya = gaxb @ self.w_ya
-        gby = gya + self.b_y
-        y = self.g_2(gby)
-        at = gaxb
-        return at, y
-
-
-class RNN(nn.Module):
-    def __init__(self, cell, num_passes):
-        super().__init__()
-
-        self.cell = cell
-        self.num_passes = num_passes
-
-    def forward(self, x):
-        a = 0
-        y = x
-        for _ in range(self.num_passes):
-            a, y = self.cell([a, y])
-
-        return y
+    def forward(self, x, h_c):
+        gaxb = self.g_1((h_c * self.w_aa) + (x * self.w_ax) + self.b_a)
+        y = self.g_2((gaxb @ self.w_ya) + self.b_y)
+        return gaxb, y
 ```
 
 For more on RNNs and the upcoming section of LSTMs you can refer to [Andrej Karpathy's blog](http://karpathy.github.io/2015/05/21/rnn-effectiveness/).
@@ -218,6 +192,30 @@ Legend:
 - NN layers are visualized using `[...]` bracelets
 
 -------
+
+An implementation of such LSTM cell could look like this
+
+```python
+import torch
+
+
+class LSTMCell(nn.Module):
+    def __init__(self, input_size, hidden_size):
+        super().__init__()
+        self.hidden_size = hidden_size
+        self.w_x = param([input_size, hidden_size * 4], 0.1)
+        self.w_h = param([input_size, hidden_size * 4], 0.1)
+        self.b = param([hidden_size * 4], 0.0)
+    
+    def forward(self, x, h_c):
+        h, c = h_c
+        gates = torch.mm(x, self.w_x) + torch.mm(h, self.w_h) + self.b
+        i, f, o, g = torch.chunk(gates, 4, dim=1)
+        i, f, o, g = torch.sigmoid(i), torch.sigmoid(f), torch.sigmoid(o), torch.tanh(g)
+        c_next = f * c + i * g
+        h_next = o * torch.tanh(c_next)
+        return h_next, c_next
+```
 
 ### Core Ideas behind LSTMs
 Let's dive deeper into the architecture of LSTMs.
@@ -449,6 +447,25 @@ $$
 But also the inputs change, each node doesn't receive $C^{t-1}$ but actually only $a^{t-1}$ and $x_t$.
 
 As mentioned earlier GRUs have a simpler architecture than regular LSTMs, due to the fact that GRUs merge the cell state and the hidden state, which can sometimes lead to faster training.
+
+A possible implementation for the GRU-cell could look like this
+```python
+class GRUCell(nn.Module):
+    def __init__(self, input_size, hidden_size):
+        super().__init__()
+        self.hidden_size = hidden_size
+        self.w_x = param([input_size, hidden_size * 3], 0.1)
+        self.w_h = param([input_size, hidden_size * 3], 0.1)
+        self.b = param([hidden_size * 3], 0.0)
+    
+    def forward(self, x, h):
+        gates = torch.mm(x, self.w_x) + torch.mm(h, self.w_h) + self.b
+        r, z, n = torch.chunk(gates, 3, dim=1)
+        r, z = torch.sigmoid(r), torch.sigmoid(z)
+        n = torch.tanh(torch.mm(x, self.w_x[:, :self.hidden_size]) + r * torch.mm(h, self.w_h[:, :self.hidden_size]))
+        h_next = (1 - z) * n + z * h
+        return h_next
+```
 
 
 ## Conclusion

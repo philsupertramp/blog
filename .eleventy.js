@@ -20,44 +20,46 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/_includes/assets/2024-04-14/*");
 
     eleventyConfig.addPlugin(mathjaxPlugin, {
-      processEscapes: false,
-  });
- eleventyConfig.addCollection(
+      tex: {
+        processEscapes: false,
+      }
+    });
+    eleventyConfig.addCollection(
 		"published",
-		function (collectionApi) {
-			return collectionApi.getFilteredByTags("published").reverse();
-		}
-	);
-	eleventyConfig.addCollection(
-		"published_notes",
-		function (collectionApi) {
-			return collectionApi.getFilteredByTags("note", "published").reverse();
-		}
-	);
-	eleventyConfig.addCollection(
-		"published_posts",
-		function (collectionApi) {
-			return collectionApi.getFilteredByTags("post", "published").reverse();
-		}
-	);
-	eleventyConfig.addCollection(
-		"old_posts",
-		function (collectionApi) {
-			return collectionApi.getFilteredByTags("old-wiki", "published").reverse().concat(collectionApi.getFilteredByTags('old-blog', 'published').reverse());
-		}
-	);
+      function (collectionApi) {
+        return collectionApi.getFilteredByTags("published").reverse();
+      }
+    );
+    eleventyConfig.addCollection(
+      "published_notes",
+      function (collectionApi) {
+        return collectionApi.getFilteredByTags("note", "published").reverse();
+      }
+    );
+    eleventyConfig.addCollection(
+      "published_posts",
+      function (collectionApi) {
+        return collectionApi.getFilteredByTags("post", "published").reverse();
+      }
+    );
+    eleventyConfig.addCollection(
+      "old_posts",
+      function (collectionApi) {
+        return collectionApi.getFilteredByTags("old-wiki", "published").reverse().concat(collectionApi.getFilteredByTags('old-blog', 'published').reverse());
+      }
+    );
 
-  
-	eleventyConfig.addPlugin(directoryOutputPlugin, {
-		// Customize columns
-		columns: {
-			filesize: true, // Use `false` to disable
-			benchmark: true, // Use `false` to disable
-		},
+    
+    eleventyConfig.addPlugin(directoryOutputPlugin, {
+      // Customize columns
+      columns: {
+        filesize: true, // Use `false` to disable
+        benchmark: true, // Use `false` to disable
+      },
 
-		// Will show in yellow if greater than this number of bytes
-		warningFileSize: 400 * 1000,
-	});
+      // Will show in yellow if greater than this number of bytes
+      warningFileSize: 400 * 1000,
+    });
     return {
         dir: {
             includes: "_includes",

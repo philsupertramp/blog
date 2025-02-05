@@ -145,7 +145,7 @@ class RNN(nn.Module):
         return y
 ```
 
-For more on RNNs and the upcoming section of LSTMs you can refer to [[http://karpathy.github.io/2015/05/21/rnn-effectiveness/|Andrej Karpathy's blog]].
+For more on RNNs and the upcoming section of LSTMs you can refer to [Andrej Karpathy's blog](http://karpathy.github.io/2015/05/21/rnn-effectiveness/).
 
 
 ## RNN issues
@@ -170,7 +170,7 @@ Now for small distances/gaps this will work again, but imagine the gap being sev
 As the distance between relevant information and the current predicition increases, RNNs struggle to retain long-term dependencies.
 There are some ways how one can achieve good quality results using RNNs on big context windows/long-term dependencies, but they have been proven to only work on toy examples.
 
-Hochreiter explored this in depth in their diploma thesis ([[https://people.idsia.ch/~juergen/SeppHochreiter1991ThesisAdvisorSchmidhuber.pdf|Hochreiter Dipl.]]) and [[http://www.comp.hkbu.edu.hk/~markus/teaching/comp7650/tnn-94-gradient.pdf|Bengio et. al]] dug deeper into the reasons for it.
+Hochreiter explored this in depth in their diploma thesis ([Hochreiter Dipl.](https://people.idsia.ch/~juergen/SeppHochreiter1991ThesisAdvisorSchmidhuber.pdf)) and [Bengio et. al](http://www.comp.hkbu.edu.hk/~markus/teaching/comp7650/tnn-94-gradient.pdf) dug deeper into the reasons for it.
 
 With that being said, an improved version was invented, called LSTM, Long Term Short Term.
 
@@ -406,7 +406,7 @@ $$
 Using the coupled gates will yield a model with reduced amount of parameters, which can in scale decrease the training time.
 
 #### Gated Recurrent Unit
-A slightly more dramatic variant of the LSTM is the Gated Recurrent Unit, short GRU, introduced by [[https://arxiv.org/pdf/1406.1078v3|Cho et al. (2014)]].
+A slightly more dramatic variant of the LSTM is the Gated Recurrent Unit, short GRU, introduced by [Cho et al. (2014)](https://arxiv.org/pdf/1406.1078v3).
 
 GRU combines the _forget_ and _input_ gates into a single _update_ gate. Apart from that it also merges the cell state with the hidden state and makes some other changes.
 
@@ -456,8 +456,8 @@ These are only three of the most notable LSTM variants, but there are plenty mor
 
 Which of these variants is the best? Are the differences noticable?
 
-These questions where explored by [[http://arxiv.org/pdf/1503.04069.pdf|Greff, et al. (2015)]], which resulted in no meaningful differences.
-In 2015 [[https://proceedings.mlr.press/v37/jozefowicz15.pdf|Jozefowicz, et al.]] explored more than ten thousand RNN architectures, finding that some work better than LSTMs on certain tasks.
+These questions where explored by [Greff, et al. (2015)](http://arxiv.org/pdf/1503.04069.pdf), which resulted in no meaningful differences.
+In 2015 [Jozefowicz, et al.](https://proceedings.mlr.press/v37/jozefowicz15.pdf) explored more than ten thousand RNN architectures, finding that some work better than LSTMs on certain tasks.
 
 In this post we discovered the RNN architecture and looked into the next big step of improvements, LSTMs.
 
@@ -469,17 +469,22 @@ Most researchers will probably state _Attention_ or _Transformers_.
 
 Soon, we will look a bit further into the transformers architecture that is powered by the attention mechanism.
 
-You can read more already about it in its original paper "Attention Is All You Need" by [[https://arxiv.org/pdf/1706.03762|A. Vaswani et al. (2017)]].
+You can read more already about it in its original paper "Attention Is All You Need" by [A. Vaswani et al. (2017)](https://arxiv.org/pdf/1706.03762).
 
 
 ---------------
 
 ## Reading Resources
 
-- https://colah.github.io/posts/2015-08-Understanding-LSTMs/
-- https://medium.com/nerd-for-tech/understanding-rnn-91d548c86ac9
-- http://karpathy.github.io/2015/05/21/rnn-effectiveness/
-- https://arxiv.org/pdf/1406.1078v3
-- https://people.idsia.ch/~juergen/SeppHochreiter1991ThesisAdvisorSchmidhuber.pdf
-- https://stanford.edu/~shervine/teaching/cs-230/cheatsheet-recurrent-neural-networks
+- [https://colah.github.io/posts/2015-08-Understanding-LSTMs/
+](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)
+- [https://medium.com/nerd-for-tech/understanding-rnn-91d548c86ac9
+](https://medium.com/nerd-for-tech/understanding-rnn-91d548c86ac9)
+- [http://karpathy.github.io/2015/05/21/rnn-effectiveness/
+](http://karpathy.github.io/2015/05/21/rnn-effectiveness/)
+- [https://arxiv.org/pdf/1406.1078v3](https://arxiv.org/pdf/1406.1078v3)
+- [https://people.idsia.ch/~juergen/SeppHochreiter1991ThesisAdvisorSchmidhuber.pdf
+](https://people.idsia.ch/~juergen/SeppHochreiter1991ThesisAdvisorSchmidhuber.pdf)
+- [https://stanford.edu/~shervine/teaching/cs-230/cheatsheet-recurrent-neural-networks
+](https://stanford.edu/~shervine/teaching/cs-230/cheatsheet-recurrent-neural-networks)
 

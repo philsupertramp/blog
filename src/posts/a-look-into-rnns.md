@@ -5,8 +5,8 @@ tags:
 title: A Look Into RNNs
 layout: mylayout.njk
 author: Philipp
-description: RNN is good, LSTM is better, GRU is the boss
-date: 2025-02-04
+description: RNNs are good, and LSTMs could be better! In this article will dive into different cell types for recurrent neural networks.
+date: 2025-02-05
 ---
 
 

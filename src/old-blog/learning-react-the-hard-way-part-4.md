@@ -26,7 +26,7 @@ One of my biggest problems from the beginning was to decide between packages. I 
 huge pile of blog posts about which package should be used in what some kind of case, but mostly it is opinion based. What I did not know was the fact that there
 could be packages which are better to use on frontend and packages you should definitely not use in your
 frontend application. Sucks, huh? I was searching for an extended Date API. As mentioned in my previous [blog
-post](/learn-react-js-the-hard-way-part-3) each of my applications depends on calculating a bunch of dates in different
+post](/old-blog/learn-react-js-the-hard-way-part-3) each of my applications depends on calculating a bunch of dates in different
 units. For example adding 2 years to a date, or to determine if a user is above 18 or not. Basically
 all that stuff we learned in elementary school. But not for computers since they know how to use logical and
 mathematical operators by themselves they decided to drop out of school.
@@ -304,7 +304,8 @@ and I am really excited for each visitor on my page.
 
 For all of you who are into security and the fact that even in the "free web" you are watched by everyone, I totally get
 the point of protecting your own privacy. This page uses – as you can see within it's code – Google Analytics. 
-(For more information check out the [privacy page]()). Which will be 
+~~(For more information check out the [privacy page]()).~~
+Which will be 
 one of the topic of one of my future posts. But maybe in a way you don't know it yet. 	(̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄
 
 Next week I will continue creating the small date library to get finally rid of 50% of the size of my app! Incredible un-zipped 200kB.

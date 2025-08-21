@@ -53,24 +53,79 @@ For that I installed
 - screen
 - neovim extension: https://github.com/stevearc/vim-arduino
 
+And from the hardware side I gathered
+- 1x Arduino UNO 
+- 1x DHT11 sensor (Temperature and Humidity)
+- 1x USB cable for Arduino
+- 1x small breadboard to connect components
+- 3x wires
 
+On the initial setup of the Arduino I needed to install required firmware/drivers
+```
+# arduino-cli core install ...
+```
+once that finished we can start working on our project.
 
-The "Hello World"
+First I created an empty directory `weedar` and initialized git in it.
+
+Ready for take-off!
+
+First things first, the "Hello World".
+
+For that we create a file `weedar.ino` with the contents
 ```cpp
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(9600); // refresh rate in ms
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  Serial.println("Hello World!");
-  delay(1000);
+  Serial.println("Hello World!"); // push string to buffer
+  delay(1000); // wait for some time (1000 ms)
 }
 ```
+after adding the file we can compile it using
+```
+# arduino-cli ...
+```
+
+Great! We have our hello world compiled, now we just need to push it onto the Arduino.
+
+For that we first connect the Arduino.
+Usually it's detected and connected right away, you can verify that with
+```
+arduino-cli devices list
+```
+You should see your device there.
+
+We push our code using
+```
+# arduino-cli 
+```
+
+Don't worry, later we might even build a make file to get rid of all of this manual work =D
+
+To read from the Arduino we simply can do a
+```
+> cat /dev/xxx
+```
+which opens up a stream and will for ever read.
+```
+Hello World!
+
+Hello World!
+...
+```
+
+Be warned, interrupts cause data loss.
 
 
-The first signals
+Next, I wanted to read temperature and humidity from the DHT11. Which was surprisingly easy.
+
+I looked up the manual for the Olegoo Arduino UNO Starter Kit, followed the wiring diagram and copied the code to read from the sensor and write to the buffer.
+
+Here's an alternate version of that
 ```cpp
 #include <dht11.h>
 #define DHT11PIN 4
@@ -95,5 +150,29 @@ void loop()
 
   delay(2000);
 }
+```
+
+Before we can compile that, we need to install the library that gives us `dht11.h` with the command
 
 ```
+# arduino-cli 
+```
+
+Then 
+- compile
+- sync
+
+and finally reading the buffer
+```
+> cat /dev/xxx
+Humidity (%): 23.0
+Temperature (C): 22.3
+
+Humidity (%): 23.0
+Temperature (C): 22.3
+...
+```
+
+That covers all for today.
+
+Tomorrow, I will update the commands and add some pictures as well as connect the ventilator and a small debugging display.

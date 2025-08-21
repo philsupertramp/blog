@@ -2,7 +2,7 @@
 tags:
  - note
  - published
-title: "Weedar: my first embedded systems project"
+title: "[WIP] Weedar: my first embedded systems project"
 layout: mylayout.njk
 author: Philipp
 description:

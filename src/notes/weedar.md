@@ -21,7 +21,7 @@ Somehow I expect a bigger yield than him.
 
 Now here's the thing, the current boss fight! :)
 
-// add image
+![Status Day 2]({{ '/_includes/assets/2025-08-21/boss-day2.jpg' | url }})
 
 ## The idea
 I have several RaspberryPi's and an Arduino Uno with several sensors laying around, that I want to use to build something useful.
@@ -29,9 +29,9 @@ I have several RaspberryPi's and an Arduino Uno with several sensors laying arou
 Hence, I figured I will build a "smart" ventilation system, with sensors and some other things!
 
 Here's the plan
-1. We need to gather data:
-  1. Humidity
-  2. Temperature
+1. We need to gather environment data about
+    - Humidity
+    - Temperature
 2. add ventilator
 3. Analyze data after adding the ventilator
 4. Improve ventilation if needed
@@ -53,16 +53,20 @@ For that I installed
 - screen
 - neovim extension: https://github.com/stevearc/vim-arduino
 
+After installing arduino-cli we need to ensure that our current user `$UID` is part of the `uucp` group
+```
+> sudo usermod -aG uucp phil
+```
+
 And from the hardware side I gathered
-- 1x Arduino UNO 
-- 1x DHT11 sensor (Temperature and Humidity)
-- 1x USB cable for Arduino
-- 1x small breadboard to connect components
+- 1x [Arduino UNO](https://www.amazon.de/-/en/Microcontroller-Motherboard-Compatible-Development-Environment/dp/B0DQ7ZJMNX?crid=RFSKXOI1) with USB-cable
+- 1x [DHT11 sensor](https://www.amazon.de/-/en/AZDelivery-Temperature-Compatible-Arduino-Raspberry/dp/B089W8DB5P/257-0848080-7241542) (Temperature and Humidity)
+- 1x [small breadboard](https://www.amazon.de/-/en/BOJACK-Breadboard-Solderless-Pieces-Flexible/dp/B0B18G3V5T/257-0848080-7241) to connect components
 - 3x wires
 
 On the initial setup of the Arduino I needed to install required firmware/drivers
 ```
-# arduino-cli core install ...
+> arduino-cli core install arduino:avr 
 ```
 once that finished we can start working on our project.
 
@@ -87,7 +91,7 @@ void loop() {
 ```
 after adding the file we can compile it using
 ```
-# arduino-cli ...
+> arduino-cli compile --fqbn arduino:avr:uno weedar.ino 
 ```
 
 Great! We have our hello world compiled, now we just need to push it onto the Arduino.
@@ -95,20 +99,22 @@ Great! We have our hello world compiled, now we just need to push it onto the Ar
 For that we first connect the Arduino.
 Usually it's detected and connected right away, you can verify that with
 ```
-arduino-cli devices list
+> arduino-cli board list
+Port         Protocol Type              Board Name  FQBN            Core
+/dev/ttyACM0 serial   Serial Port (USB) Arduino Uno arduino:avr:uno arduino:avr
 ```
 You should see your device there.
 
 We push our code using
 ```
-# arduino-cli 
+> arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno weedar.ino
 ```
 
 Don't worry, later we might even build a make file to get rid of all of this manual work =D
 
 To read from the Arduino we simply can do a
 ```
-> cat /dev/xxx
+> cat /dev/ttyACM0
 ```
 which opens up a stream and will for ever read.
 ```
@@ -123,9 +129,16 @@ Be warned, interrupts cause data loss.
 
 Next, I wanted to read temperature and humidity from the DHT11. Which was surprisingly easy.
 
-I looked up the manual for the Olegoo Arduino UNO Starter Kit, followed the wiring diagram and copied the code to read from the sensor and write to the buffer.
+I looked up the manual for the [Olegoo Arduino UNO Starter Kit](https://www.elegoo.com/blogs/arduino-projects/elegoo-uno-project-super-starter-kit-tutorial), followed the wiring diagram and copied the code to read from the sensor and write to the buffer.
 
-Here's an alternate version of that
+Here's the wiring diagram
+
+![DHT11 Wiring Diagram]({{ '/_includes/assets/2025-08-21/dht11-wire.png' | url }})
+
+We'll add a breadboard in between, tho.
+
+I don't want to force you guys to download the Olegoo starter kit, so we'll be using a different implementation that I found
+[here](https://projecthub.arduino.cc/arcaegecengiz/using-dht11-12f621)
 ```cpp
 #include <dht11.h>
 #define DHT11PIN 4
@@ -155,8 +168,19 @@ void loop()
 Before we can compile that, we need to install the library that gives us `dht11.h` with the command
 
 ```
-# arduino-cli 
+> arduino-cli lib install --git-url 'https://github.com/adidax/dht11'
 ```
+This will initially most likely fail, because we didn't configure the arduino-cli fully, yet.
+
+To allow the installation of external libraries via git we need to update the configuration
+```
+> arduino-cli config set library.enable_unsafe_install true 
+```
+Then hit again
+```
+> arduino-cli lib install --git-url 'https://github.com/adidax/dht11'
+```
+
 
 Then 
 - compile
@@ -164,7 +188,7 @@ Then
 
 and finally reading the buffer
 ```
-> cat /dev/xxx
+> cat /dev/ttyACM0
 Humidity (%): 23.0
 Temperature (C): 22.3
 
@@ -172,7 +196,277 @@ Humidity (%): 23.0
 Temperature (C): 22.3
 ...
 ```
+![DHT11 at work]({{ '/_includes/assets/2025-08-21/dht11-connect.jpg' | url }})
 
 That covers all for today.
 
 Tomorrow, I will update the commands and add some pictures as well as connect the ventilator and a small debugging display.
+
+
+## Day 2
+I've started the day with fixing the content of yesterday, provided images and commands.
+
+Afterwards, I started with the next big step: Ventilation.
+
+For ventilation I originally wanted to use an old PC fan that I have laying around.
+But because it requires 12V, and the Arduino only delivers 3.3V or 5V, I will use a simple 5V DC motor for the first version.
+
+To combine yesterdays implementation with the ventilator I will use these things today:
+- Arduino UNO with USB-cable
+- DHT11
+- Arduino Prototype Board (incl. small breadboard)
+- a bunch of wires
+- 5V DC motor with rotor blade
+- L293D controller
+
+The first iteration started exactly like yesterday.
+
+I followed the wiring diagram, and copy-pasted the code from the Starter Kit
+
+![DC motor wiring diagram]({{ '/_includes/assets/2025-08-21/dc-motor-wire.jpg' | url }})
+
+And the script
+```cpp
+//www.elegoo.com
+//2016.12.12
+
+/************************
+Exercise the motor using
+the L293D chip
+************************/
+
+#define ENABLE 5
+#define DIRA 3
+#define DIRB 4
+
+int i;
+ 
+void setup() {
+  //---set pin direction
+  pinMode(ENABLE,OUTPUT);
+  pinMode(DIRA,OUTPUT);
+  pinMode(DIRB,OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  //---back and forth example
+    Serial.println("One way, then reverse");
+    digitalWrite(ENABLE,HIGH); // enable on
+    for (i=0;i<5;i++) {
+    digitalWrite(DIRA,HIGH); //one way
+    digitalWrite(DIRB,LOW);
+    delay(500);
+    digitalWrite(DIRA,LOW);  //reverse
+    digitalWrite(DIRB,HIGH);
+    delay(500);
+  }
+  digitalWrite(ENABLE,LOW); // disable
+  delay(2000);
+
+  Serial.println("fast Slow example");
+  //---fast/slow stop example
+  digitalWrite(ENABLE,HIGH); //enable on
+  digitalWrite(DIRA,HIGH); //one way
+  digitalWrite(DIRB,LOW);
+  delay(3000);
+  digitalWrite(ENABLE,LOW); //slow stop
+  delay(1000);
+  digitalWrite(ENABLE,HIGH); //enable on
+  digitalWrite(DIRA,LOW); //one way
+  digitalWrite(DIRB,HIGH);
+  delay(3000);
+  digitalWrite(DIRA,LOW); //fast stop
+  delay(2000);
+
+  Serial.println("PWM full then slow");
+  //---PWM example, full speed then slow
+  analogWrite(ENABLE,255); //enable on
+  digitalWrite(DIRA,HIGH); //one way
+  digitalWrite(DIRB,LOW);
+  delay(2000);
+  analogWrite(ENABLE,180); //half speed
+  delay(2000);
+  analogWrite(ENABLE,128); //half speed
+  delay(2000);
+  analogWrite(ENABLE,50); //half speed
+  delay(2000);
+  analogWrite(ENABLE,128); //half speed
+  delay(2000);
+  analogWrite(ENABLE,180); //half speed
+  delay(2000);
+  analogWrite(ENABLE,255); //half speed
+  delay(2000);
+  digitalWrite(ENABLE,LOW); //all done
+  delay(10000);
+}
+```
+
+Now as you can see we can move the rotor into two different directions,
+one will move air away from the motor (`DIRB`), the other one towards the motor (`DIRA`).
+Apart from that we can turn the motor on `analogWrite(ENABLE,HIGH)` or off `analogWrite(ENABLE,LOW)`.
+
+
+By passing a value between `0` and `255` to `ENABLE` we can adjust the rotation speed.
+
+Again, I compiled the code and uploaded it to the Arduino to check if everything was working as expected.
+
+That being said I integrated the motor code into the previous code base for the DHT11 sensor
+```cpp
+#include <dht11.h>
+#define DHT11PIN 5
+
+#define DC_ENABLE 4
+#define DC_DIRA 3
+#define DC_DIRB 2
+
+int i;
+
+
+dht11 DHT11;
+
+void  setup()
+{
+  //---set pin direction
+  pinMode(DC_ENABLE,OUTPUT);
+  pinMode(DC_DIRA,OUTPUT);
+  pinMode(DC_DIRB,OUTPUT);
+  Serial.begin(9600);
+}
+void loop()
+{
+  int chk = DHT11.read(DHT11PIN);
+
+  Serial.print("Humidity (%): ");
+  Serial.println((float)DHT11.humidity, 2);
+
+  Serial.print("Temperature  (C): ");
+  Serial.println((float)DHT11.temperature, 2);
+
+  if((float)DHT11.temperature >= 35.0){
+    Serial.println("FAN START");
+    digitalWrite(DC_ENABLE,HIGH);
+    digitalWrite(DC_DIRB,HIGH);
+  } else if ((float)DHT11.temperature >= 30.0) {
+    Serial.println("FAN START");
+    digitalWrite(DC_ENABLE,127);
+    digitalWrite(DC_DIRB,HIGH);
+  } else if ((float)DHT11.temperature > 25.0) {
+    Serial.println("FAN START");
+    digitalWrite(DC_ENABLE,127);
+    digitalWrite(DC_DIRB,HIGH);
+  } else {
+    Serial.println("FAN STOP");
+    digitalWrite(DC_ENABLE,LOW);
+    digitalWrite(DC_DIRB,LOW);
+  }
+  delay(2000);
+}
+```
+
+Cool, with this our motor will turn on for any temperature bigger than 25 degree Celsius with different steps and will be off otherwise.
+
+Time to get the wiring done.
+
+This time, instead of following a diagram I needed to come up with my own solution.
+
+Here's an image of it
+
+![Prototype #1 Wiring]({{ '/_includes/assets/2025-08-21/proto1-wiring.jpg' | url }})
+
+You can see that I'm using the Prototype Board now and I've translated the DHT11 combined with the 5V DC motor wiring onto it.
+
+Because we're using the Arduino directly we can omit some of the wires, which is cool.
+
+Apart from that I've moved the AC plug from the breadboard + AC module to the Arduino.
+
+Now it can run without my laptop and I can patch the soft- and hardware however I want - although I will for sure turn it off whenever I patch hardware =D
+
+I stuffed the motor into a smaller card box that I had laying around.
+So without any further ado...
+
+Let me introduce to you "Prototype #1"!
+
+![Prototype #1]({{ '/_includes/assets/2025-08-21/proto1.jpg' | url }})
+
+And in action
+
+![Prototype #1 deployed]({{ '/_includes/assets/2025-08-21/proto1-action.jpg' | url }})
+
+The DHT11 sits on top of the vent box, and the ventilator points into the direction of a secured
+new hole that sits on the bottom of the dry box.
+
+![Hole #1 (inside)]({{ '/_includes/assets/2025-08-21/hole1.jpg' | url }})
+![Hole #1 (outside)]({{ '/_includes/assets/2025-08-21/hole2.jpg' | url }})
+
+Whew, that was relatively quick to solve!
+
+Now let's hop onto the next challenge.
+
+I wanna analyze the data to improve my solution upon it!
+
+To do that, I hooked the Arduino via USB to one of my RaspberryPi's.
+
+This one is running [pi-hole](https://pi-hole.net/) in my network. It's kinda already running and collecting data, so <u>why not</u>!
+
+Well... I didn't touch this Pi for a very long time - apart from keeping pi-hole up to date.
+
+Hence, a beloved old and very outdated environment greeted me
+```shell
+pi@raspberrypi:~/weedar $ python --version
+Python 2.7.16
+pi@raspberrypi:~/weedar $ python3 --version
+Python 3.7.3
+```
+
+Yikes!
+
+But better than nothing, and because I am unsure if pi-hole needs any of that we'll just keep rolling!
+
+To speed up the process - and because I don't like building full stack apps, I asked ChatGPT for help
+with a quick monitoring setup.
+
+You can find the conversation [here](https://chatgpt.com/share/68a89104-4b88-8012-9a1b-310f0f7dbd2c).
+
+I followed it's instructions, which were fairly simple and obvious after seeing the setup.
+![Monitoring Dashboard]({{ '/_includes/assets/2025-08-21/dashboard0.png' | url }})
+
+
+Sweet, now we have a monitoring tool and a first attempt to improve the box!
+
+Time to talk about our goal.
+
+> When drying cannabis, the goal is to **preserve cannabinoids, terpenes, and aroma** while preventing mold. The commonly recommended conditions are:
+>
+> * **Temperature:** **60–70 °F** (15–21 °C)
+> 
+>   * Too warm (>75 °F / 24 °C) can degrade terpenes and dry the buds too quickly.
+>   * Too cold (<55 °F / 13 °C) slows drying excessively, raising mold risk.
+> 
+> * **Relative Humidity (RH):** **50–60%**
+> 
+>   * Lower than 45% RH can make the buds dry too fast, leaving them harsh.
+>   * Higher than 65% RH risks mold and uneven drying.
+> 
+> 🌱 **Ideal target**:
+> 
+> * **65 °F (18 °C)**
+> * **55% RH**
+
+
+We're at a constant level of 25 degree Celsius and 37% RH.
+
+Time to think about a soltion! Yey!!!
+
+But that's for tomorrow.
+
+To wrap things up I installed `screen` on my RaspberryPi,
+terminated all running scripts and then ran
+```shell
+> screen
+
+> python collector.py & python server.py &
+```
+And detached from the screen session via `CTRL + a` followed by `d`.
+
+See ya tomorrow!

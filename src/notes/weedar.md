@@ -470,3 +470,104 @@ terminated all running scripts and then ran
 And detached from the screen session via `CTRL + a` followed by `d`.
 
 See ya tomorrow!
+
+## Day 3
+Before I begin with the intro for today a quick note from yesterday.
+
+After finishing the post update I went ahead and had one more iteration with ChatGPT on the interface,
+updated the local version and ran it on the Pi.
+
+Apart from that I also added a second hole to the top if the box. You will see a picture later on. But keep that in mind for a second.
+The fan still blows air out in the **bottom** of the box.
+
+
+So today starts with a quick physics lesson.
+
+Warm air can hold a little amount of water.
+
+Cold air can hold more water.
+
+Warm air is light and therefore floats ontop of cold air.
+So to get rid of warm air you need to pull it out on top.
+
+Here's a screenshot of the dashboard right now
+
+![More or less everything is stable]({{ '/_includes/assets/2025-08-21/dashboard1.png' | url }})
+
+In our case with 23 °C and 38% RH we need more cold air and get rid of the warm one.
+
+Hence, one of todays todos is to put the ventilator on the top hole.
+
+![The 12V fan]({{ '/_includes/assets/2025-08-21/fan1.jpg' | url }})
+
+As earlier stated, the Arduino provides 5V, but the fan requires 12V.
+
+Time for tinkering!
+
+But before I need to research if and how this is possible.
+I technically can use a 12V wall plug and wire it.
+
+But I need the wiring for the plug as well as the ventilator.
+
+After a quick safety research before
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/TwIvUbOhcKE?si=QknsQrAycFhhhnAe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+I was sure that anything with 12V wouldn't be terrible and hurt me too much.
+
+Nothing happened so far!
+
+So the internet says that for the fan the wiring is, looking onto the outgoing wires
+- left: ground
+- middle: +12V
+- right: Tach (read only)
+
+The wall plug on the other hand is gonna be more of a trial and error.
+
+I smashed a quick circuit together, connected a contact of the plug to the left and the other to the middle contact... Nothing.
+Obviously, once I changed the connections everything started working.
+
+<video width="320" height="240" controls>
+  <source src="{{ '/_includes/assets/2025-08-21/fan-proto.mp4' | url }}" type="video/mp4">
+</video>
+
+Notice the drink right next to it - keeping up the safety!
+Here's a picture, for a closer lookup
+
+![The 12V fan in action]({{ '/_includes/assets/2025-08-21/fan-proto.jpg' | url }})
+
+Oh, and do you see the black cable going into the breadboard?
+Right, that's the 12V plug :))))
+
+<u>Please do not build this at home! I am highly unprofessional.</u>
+
+I quickly smashed things together and with the help of the internet build a wiring that connects
+the Arduino with the fan and allows it to control the speed of the rotor.
+
+Using a 2N2222A-1726 npn transistor and in total 250Ω of resistors (1x 220Ω and 3x 10Ω chained in row).
+
+It's pretty simple. And once you figured out which contact is which of the transistor it actually makes sense.
+We add the resistors to protect the Arduino from the 12V we use for the fan, apart from that everything is the same circuit - 
+apart from the transistor that acts like a gate.
+
+![Wiring for the fan]({{ '/_includes/assets/2025-08-21/proto2-wiring1.jpg' | url }})
+
+
+Interestingly, if you fuck up the outer pins of the transistor you create a closed circuit and the fan starts.
+If you don't understand that this is bad - you will either feel, smell or see your failure because you're currently frying your transistor :)
+<u>DON'T DO IT</u>
+
+Once this was done I smashed all together and put it into the box.
+
+I fixed the fan on top of the box, blowing air out. From the outside I fixed it with BIC roller pens, the inside is holding the fan
+and the caps are holding the insides. It works surprisingly well!
+
+![The new fan installed]({{ '/_includes/assets/2025-08-21/fan2-1.jpg' | url }})
+
+Together the insides now look like this:
+
+![The inside]({{ '/_includes/assets/2025-08-21/proto2-1.jpg' | url }})
+
+Alright, more monitoring with the new solution until tomorrow!
+
+

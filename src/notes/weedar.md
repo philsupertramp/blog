@@ -571,3 +571,40 @@ Together the insides now look like this:
 Alright, more monitoring with the new solution until tomorrow!
 
 
+## Day 4
+I experimented with different approaches how to run the fan to bring up the humidity inside the box.
+
+Additionally, I added a cup of water into the box which acts as a very small source of humidity.
+
+Unfortunately, nothing worked and throughout my experiments I broke the 12V fan.
+
+Luckily, it was Sunday morning when I noticed and not Saturday, so I immediately ordered a replacement on Amazon.
+
+I opted for a pack of 3x little 3.3-5V fans that usually cool Raspberry Pi CPUs.
+
+Because I was too afraid of an uncontrolled environment I ordered them together with other things like more DTH11s with early morning delivery.
+
+In the box I reverted everything to the state of day 1 and called it a day.
+
+
+## Day 5
+Amazon fucked up =)
+
+I didn't receive the fans in my order.
+
+So I placed yet another order, but this time 3 extremely powerful 12V fans. I would assume the reader to think now about the reason. And that reason is quite simple.
+
+First, it poured rain since a few days, and whenever I open a window the room that holds the box gets flooded with humid air. Second, there is not really an air exchange happening between the box and the room. Inside the box is a more or less constant temperature of 25 degree Celsius which causes the water inside the cup to evaporate.
+And because of that we're today on 60% humidity, rising.
+If we don't manage to get this fixed before we reach a constant level of >65% we risk the buds to get mouldy and we don't want that for our friend!
+
+It's better to fuck up the tricomes or mess up all of the drying than get it wet and mouldy!
+
+## Day 5
+Captain, we've reached dangerous territory!
+
+Humidity is at 65% with little tendencies to raise.
+
+The fans arrived and I immediately deployed one on top of the box to pull out warm air.
+
+I continue monitoring until tomorrow.

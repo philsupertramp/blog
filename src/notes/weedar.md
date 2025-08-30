@@ -600,7 +600,7 @@ If we don't manage to get this fixed before we reach a constant level of >65% we
 
 It's better to fuck up the tricomes or mess up all of the drying than get it wet and mouldy!
 
-## Day 5
+## Day 6
 Captain, we've reached dangerous territory!
 
 Humidity is at 65% with little tendencies to raise.

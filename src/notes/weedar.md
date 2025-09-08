@@ -570,8 +570,20 @@ Together the insides now look like this:
 
 Alright, more monitoring with the new solution until tomorrow!
 
-
 ## Day 4
+Today I don't have much time to actively contribute to the build.
+But I asked ChatGPT to refine the dashboard a little bit
+
+![The updated dashboard]({{ '/_includes/assets/2025-08-21/dashboard2.png' | url }})
+
+We can now query for bigger time windows and set the step size of the graph.
+
+Now who would have thought we will see something like the cosine curve here right away =D
+
+For me as a mathematician this is lovely!!
+
+Basically since last night, when I changed the fan, we started to have a controllable environment!
+
 I experimented with different approaches how to run the fan to bring up the humidity inside the box.
 
 Additionally, I added a cup of water into the box which acts as a very small source of humidity.
@@ -608,3 +620,25 @@ Humidity is at 65% with little tendencies to raise.
 The fans arrived and I immediately deployed one on top of the box to pull out warm air.
 
 I continue monitoring until tomorrow.
+
+## Day 7
+Today is the final project day. I didn't plan to spend more than 7 days on this, anything past that point wouldn't justify spending the time on it anymore, because then I could manually adjust environment parameter, i.e. humidity and temperature.
+
+I am very confident in the claim that one of the biggst hurdles of this project was the cardboard box environment.
+
+Cardboard just has this amazing property of sucking in humidity like a sponge and then not releasing it anymore. And I felt this whenever I spend a little more time than usual next to it, or worked next to it after a humid day - like days 2-3.
+
+Another problem was created by the position of the ventilation holes of the box - which I could fix quickly.
+
+First, the holes allowed debree and dust to get into the system, which we don't want in this particular case.
+
+But also the positioning enabled the airstream to not affect the whole volume of the box.
+This caused temperature and air to get stuck on the back of the box, whilst the front was in constant movement.
+
+Obviously, this affected the drying process for the full batch.
+
+<hr/>
+
+Finishing this article, whenever I got time... :(
+
+I know I still owe you several bits of information, a full conclusion and a full part list ;)

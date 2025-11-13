@@ -529,8 +529,8 @@ var openFile = async function(target, element) {
   console.log(data);
   reader.readAsText(data);
 };
-openFile('/_includes/assets/2025-11-12/test-doc-2.txt', document.getElementById("file-1-output"))
-openFile('/_includes/assets/2025-11-12/test-doc-3.txt', document.getElementById("file-2-output"))
+openFile('/_includes/assets/2025-11-12/test-pdf-2.txt', document.getElementById("file-1-output"))
+openFile('/_includes/assets/2025-11-12/test-pdf-3.txt', document.getElementById("file-2-output"))
 </script>
 </div>
 
@@ -757,4 +757,45 @@ World
 
 Woohoo, congrats! We managed to extract text content from our document(s)!
 
-<div style="width:100%;height:0;padding-bottom:100%;position:relative;"><iframe src="https://giphy.com/embed/zQ59i1AwVXhd2chKyX" width="100%" height="50%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
+<iframe src="https://giphy.com/embed/zQ59i1AwVXhd2chKyX" width="auto" height="250px" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+
+
+Alright, that's not fully usable for us, just yet.
+What we would actually want is apart from the text content also a form of structure, like bounding boxes or coordinates.
+
+Thankfully, the PDF got us covered.
+We can use the `BT..ET` blocks to retrieve this information.
+Inside each block we have a set of instructions that help us structure the content.
+These instructions include
+
+| Operator          | Meaning                                                 |
+| ----------------- | ------------------------------------------------------- |
+| `Tm`              | Set text matrix (scaling + rotation + initial position) |
+| `Td`              | Move text position (relative offset in text space)      |
+| `Td` + `Tj` chain | Position, draw text, move cursor                        |
+| `T*`              | Move to next line                                       |
+| `Tf`              | Set font and size (you can derive line height)          |
+
+
+Next in line would be recreating text sturcture, so apart from our text content, we also need to retrieve the position of each text element.
+
+**Note**: That being said, the approach we're looking into here will only work well for documents that have horizontal text on the same line.
+Otherwise we will need to come up with a more sophisticated algorithm that will be beyond this post.
+
+Great, now let's get started and extract coordinates for text!
+
+All we need to do is adjust our `decode_bt_block` method. Instead of strings, it will now return a list of structured elements with the form
+```json
+{
+  "text": "Hello World",
+  "x": 0,
+  "y": 0,
+  "size": 12,
+  "bbox": [0, 0, 25.5, 12]
+}
+```
+
+
+
+
+

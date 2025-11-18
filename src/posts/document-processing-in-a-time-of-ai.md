@@ -795,7 +795,3 @@ All we need to do is adjust our `decode_bt_block` method. Instead of strings, it
 }
 ```
 
-
-
-
-

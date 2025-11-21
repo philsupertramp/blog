@@ -49,6 +49,9 @@ date: 2025-11-12
     th {
       border: 2px solid black;
     }
+    pre[class*="language-"]{
+      font-size: 12;
+    }
 </style>
 In this post we want to explore how modern Large Language Models (some people might call them "AI"), like [Google's Gemini](https://deepmind.google/models/gemini/),
 are suddenly capable of processing documents of all kinds, not just text.
@@ -229,7 +232,7 @@ Below you can find an interactive example, that allows you to render your PDF fi
         <p>The text below is a "Content Stream". A content stream is the heart of a page. It's a list of drawing commands in a <a href="https://en.wikipedia.org/wiki/PostScript">PostScript</a>-like language.
         <p>You can hack around in the textarea and try out different things to understand the format better.</p>
         <p>For a more detailed description, check out our interactive <a href="/_includes/assets/2025-11-12/interactive-pdf.html">Explainer Page</a>!</p>
-        <p><strong>Please note</strong> for demo purposes we only allow you to reference <code>/Img1</code>, otherwise we would need to dynamically create the image object inside the document.</p>
+        <p><strong>Please note</strong> for demo purposes we only allow you to reference <code>/Img1</code> or <code>/Img2</code>, otherwise we would need to dynamically create the image object inside the document.</p>
         <textarea id="pdf-code" class="pdf-code-textarea">
         </textarea>
         <button id="run-btn" class="run-button">Run Instructions</button>
@@ -291,7 +294,47 @@ BT
 % Show the text
 
 ET
-% End Text block`;
+% End Text block
+
+
+BT
+% Begin Text block
+
+/F1 18 Tf
+% Set Font 'F1' to 12 points
+
+72 425 Td
+% Move to position (x:72, y:500)
+% (below the image)
+
+(We can even reference the same image multiple times, while moving) Tj
+% Show the text
+
+70 407 Td
+( it around the page.) Tj
+
+ET
+% End Text block
+
+q
+% q: Save graphics state
+
+200 0 0 150 100 250 cm
+% cm: Set transformation matrix
+% (scale 200w, 150h; position at x:100, y:550)
+
+/Img1 Do
+% Do: Draw the image named /Img1
+
+200 0 0 150 350 250 cm
+% cm: Set transformation matrix
+% (scale 200w, 150h; position at x:100, y:550)
+
+/Img2 Do
+% Do: Draw the image named /Img2
+
+Q
+% Q: Restore graphics state`;
 
         runBtn.addEventListener('click', () => {
             // Clear previous run
@@ -416,10 +459,12 @@ ET
                         
                         if (graphicsState.currentMatrix) {
                             const [a, b, c, d, e, f] = graphicsState.currentMatrix;
+                            let img_path = (imageName === '/Img1' ? '/_includes/assets/newton.jpg' : '/_includes/assets/collage-cat.jpg');
+                            console.log(img_path, imageName)
                             
                             const imgPlaceholder = document.createElement('div');
                             imgPlaceholder.style.cssText = `
-                                background: center url("/_includes/assets/newton.jpg");
+                                background: center url(` + img_path + `);
                                 background-size: contain;
                                 position: absolute;
                                 border: 2px dashed #9ca3af;
@@ -763,6 +808,8 @@ Woohoo, congrats! We managed to extract text content from our document(s)!
 Alright, that's not fully usable for us, just yet.
 What we would actually want is apart from the text content also a form of structure, like bounding boxes or coordinates.
 
+### Structure Parsing
+
 Thankfully, the PDF got us covered.
 We can use the `BT..ET` blocks to retrieve this information.
 Inside each block we have a set of instructions that help us structure the content.
@@ -773,6 +820,7 @@ These instructions include
 | `Tm`              | Set text matrix (scaling + rotation + initial position) |
 | `Td`              | Move text position (relative offset in text space)      |
 | `Td` + `Tj` chain | Position, draw text, move cursor                        |
+| `TJ`              | Basically like `Td` + `Tj` for a single element         |
 | `T*`              | Move to next line                                       |
 | `Tf`              | Set font and size (you can derive line height)          |
 
@@ -784,6 +832,135 @@ Otherwise we will need to come up with a more sophisticated algorithm that will 
 
 Great, now let's get started and extract coordinates for text!
 
+First, we need to extend our `extract_text_from_uncompressed_pdf` method, to not only consider the `BT..ET` blocks, but also their prepending movement instruction that is indicated by the line ending `cm`. These blocks are page level coordinate transformations for all content that follows them.
+This will allow us to extract all text content as well as create transformation matrices to move the content inside the document according to the structure defined inside the PDF.
+
+
+```python
+def extract_text_from_uncompressed_pdf(data: str) -> list:
+    cmap = build_global_map_from_pdf_text(data)
+    CMD_RE = re.compile(
+        r"(\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+cm)"  # 1: ...cm
+        r"|(BT(.*?)ET)",                             # 2: BT...ET
+        re.S
+    )
+
+    identity_matrix = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+    ctm = list(identity_matrix) # Page-level Matrix
+    tm = list(identity_matrix)  # Text Matrix
+    tlm = list(identity_matrix) # Text-Line Matrix
+    font = None
+    # just a default font size, will be extracted from the PDF
+    size = 12.0
+
+    all_text_items = []
+    for m in CMD_RE.finditer(data):
+        cm_match = m.group(1)
+        bt_content = m.group(3)
+        if cm_match:
+            ctm = [float(v) for v in cm_match.split()[:6]]
+            continue
+        if bt_content is None:
+            continue
+
+        try:
+            items, tm, tlm, size, font = decode_bt_block(
+                bt_content, cmap, ctm, tm, tlm, size, font
+            )
+            if items:
+                all_text_items.append(items)
+        except (ValueError, IndexError):
+            continue
+    return all_text_items
+
+```
+<a name="math-example"></a>
+As you can see we're using a bit more advanced RegEx now.
+It essentially looks for two types of content
+First the lines ending with
+```
+...cm
+```
+second, the content wrapped inside `BT..ET` tags.
+
+In our test document this could be
+```
+ .75 0 0 .75 77.25 232.02759 cm
+```
+and
+```
+ 
+/F4 14.666667 Tf
+1 0 0 -1 0 .47981739 Tm
+88.774796 -13.2773438 Td <0049> Tj
+4.0719757 0 Td <0052> Tj
+8.1511078 0 Td <0051> Tj
+8.1511078 0 Td <0057> Tj
+```
+We described the specific `BT` block attributes already in the table above.
+The `cm` blocks contain 6 float values followed by a `cm`, basically like the `Tm` blocks inside `BT` blocks. But instead of a local transformation it contains a global one.
+The first 4 values is the scaling matrix of the content
+\begin{pmatrix}
+x_{0,0} & x_{1,0}\\\\
+x_{0,1} & x_{1,1}
+\end{pmatrix}
+
+and the last two are the page coordinates to which to move
+
+\begin{pmatrix}
+  \Delta_x\\\\
+  \Delta_y
+\end{pmatrix}
+
+This allows us to compute coordinates simply by doing
+
+
+\begin{align}
+\begin{pmatrix}
+x_{\text{new}}\\\\y_{\text{new}}
+\end{pmatrix} = 
+\begin{pmatrix}
+x_{0,0} & x_{1,0}\\\\
+x_{0,1} & x_{1,1}
+\end{pmatrix}
+\cdot 
+\begin{pmatrix}
+x\\\\y
+\end{pmatrix}
++ 
+\begin{pmatrix}
+  \Delta_x\\\\
+  \Delta_y
+\end{pmatrix}
+\end{align}
+
+Let's assume we have the starting coordinates `[50, 20]`
+
+\begin{align}
+\begin{pmatrix}
+x_{\text{new}}\\\\y_{\text{new}}
+\end{pmatrix} = 
+\begin{pmatrix}
+0.75 & 0\\\\
+0 & 0.75
+\end{pmatrix}
+\cdot 
+\begin{pmatrix}
+50\\\\20
+\end{pmatrix}
++ 
+\begin{pmatrix}
+  77.25\\\\
+  232.02759
+\end{pmatrix} =
+\begin{pmatrix}
+  114.75\\\\
+  247.02759
+\end{pmatrix}
+\end{align}
+
+Great, this allows us now to properly extract bounding boxes of our text.
+
 All we need to do is adjust our `decode_bt_block` method. Instead of strings, it will now return a list of structured elements with the form
 ```json
 {
@@ -794,4 +971,220 @@ All we need to do is adjust our `decode_bt_block` method. Instead of strings, it
   "bbox": [0, 0, 25.5, 12]
 }
 ```
+This will be a bit more work now, because instead of just the reading all `<hhhh>` hex tokens, we now need to parse all different attributes to properly understand the structure.
 
+For this we extend our simple `Tj` RegEx with definitions for `Tm`, `Td`, `Tf` and `TJ`
+
+```python
+BT_CMD_RE = re.compile(
+    r"(\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+Tm)"  # 1: Tm
+    r"|(\S+\s+\S+\s+Td)"                         # 2: Td
+    r"|(\S+\s+\S+\s+Tf)"                         # 3: Tf
+    r"|<([0-9A-Fa-f]+)>\s*Tj"                    # 4: Tj (simple)
+    r"|\[(.*?)\]\s*TJ"                           # 5: TJ (with positioning)
+)
+```
+This yields the following 6 groups
+- `Tm`: gives us 6 float values
+- `Td`: 2 float values
+- `Tf`: 2 float values
+- `Tj`: hex token value (`<hhhh>` hex token without brackets -> `hhhh`)
+- `TJ` a list of elements, each are of form `<hhhh> ... ...`
+
+For now and for the sake of simplicity we ignore the `TJ` blocks here, but you should definitely look into them!
+
+```python
+def decode_bt_block(block_content: str, cmap: dict[str, str], ctm: list[float], tm: list[float], tlm: list[float], size: float, font_name: str = None):
+    items = []
+    
+    local_tm = list(tm)
+    local_tlm = list(tlm)
+    local_size = size
+    local_font = font_name
+
+    for m in BT_CMD_RE.finditer(block_content):
+        ...
+```
+Because we're iterating over all `BT..ET` blocks, we need to keep track of the transformations. Hence, our method gets the global Page level, Text level and Text-Line level matrices as input.
+Apart from that we pass the current font size and font name to the method, just for simplicities sake.
+
+Like with the simple hex token extraction we iterate over the groups we find inside the provided text block.
+
+Now, let's look inside this loop and see how we parse the content.
+
+
+```python
+for m in BT_CMD_RE.finditer(block_content):
+    tm_match = m.group(1)
+    td_match = m.group(2)
+    tf_match = m.group(3)
+    tj_match = m.group(4)
+    TJ_match = m.group(5)  # TODO: implement me 
+    
+    try:
+        if tm_match:
+            vals = [float(v) for v in tm_match.split()[:6]]
+            local_tm = vals
+            local_tlm = vals
+        
+        elif td_match:
+            dx, dy = map(float, td_match.split()[:2])
+            move_matrix = [1.0, 0.0, 0.0, 1.0, dx, dy]
+            local_tlm = matrix_multiply(move_matrix, local_tlm)
+            local_tm = list(local_tlm)
+            
+        elif tf_match:
+            parts = tf_match.split()
+            local_font = parts[0].strip("/")
+            local_size = float(parts[1])
+            
+        elif tj_match:
+            hex_str = tj_match.lower()
+            
+            for i in range(0, len(hex_str), 4):
+                code_hex = hex_str[i:i+4]
+                code = f"<{int(code_hex, 16):04x}>" 
+                text = cmap.get(code, "?")
+
+                # This should use some more advanced heuristics
+                # to properly convert spacing
+                w_text_space = local_size 
+
+                final_matrix = matrix_multiply(local_tm, ctm)
+                (tx, ty) = transform_point(0, 0, final_matrix)
+
+                w_page_simple = w_text_space * final_matrix[0]
+                h_page_simple = local_size * final_matrix[3]
+                bbox = (tx, ty, tx + w_page_simple, ty + h_page_simple)
+                
+                items.append(dict(
+                    text=text, 
+                    x=tx, 
+                    y=ty, 
+                    size=local_size * 0.5,
+                    bbox=bbox
+                ))
+                
+                advance_matrix = [1, 0, 0, 1, w_text_space, 0]
+                local_tm = matrix_multiply(advance_matrix, local_tm)
+```
+
+As you can see we're using two helper methods `transform_point` and `matrix_multiply`.
+Those are quite literal just matrix-vector operators. I didn't want to integrate the next dependency, just to do some simple math.
+
+Here are the two methods
+```python
+def matrix_multiply(M1, M2):
+    """Performs PDF matrix multiplication: M = M1 * M2"""
+    a1, b1, c1, d1, e1, f1 = M1
+    a2, b2, c2, d2, e2, f2 = M2
+    
+    a = a1*a2 + b1*c2
+    b = a1*b2 + b1*d2
+    c = c1*a2 + d1*c2
+    d = c1*b2 + d1*d2
+    e = e1*a2 + f1*c2 + e2
+    f = e1*b2 + f1*d2 + f2
+    
+    return [a, b, c, d, e, f]
+
+def transform_point(x, y, M):
+    """Transforms a point (x, y) by a matrix M."""
+    a, b, c, d, e, f = M
+    tx = x*a + y*c + e
+    ty = x*b + y*d + f
+    return tx, ty
+```
+
+It's simple rendering math. You have local coordinates of an object you want to render onto your screen.
+But your screen only knows global (world) coordinates.
+So to overcome this we "translate" the local matrix into world space, then compute new coordinates according to new world space. Just like we did in the [example](#math-example) before.
+
+Let's consider a different doc that is a bit more complex.
+
+<div style="display: flex">
+  <div style="width: 95%; height: 250px; margin-right: 5%">
+    <embed src="/_includes/assets/2025-11-12/green-on-green.qdf.pdf" width="100%" height="100%" type="application/pdf">
+  </div>
+</div>
+
+Using this adjusted implementation we can now recreate the document structure as desired.
+
+<div style="display: flex">
+  <div style="width: 45%; margin-right: 5%">
+     <img src="/_includes/assets/2025-11-12/test-doc.png" />
+  </div>
+  <div style="margin-left: 5%; width: 45%">
+    Here you can see the text content that make up the full document, as well as the table that contains text inside the document.
+    Apart from that you can see that we're able to extract all text, even the one underneath the image that is green text on green background.
+    But we still don't actually detect tables, nor images inside the document.
+  </div>
+</div>
+Vector graphics will be the last bit we'll tackle manually, then we'll move onto bigger things, with a more reliable backend.
+
+### Vector Graphic Parsing
+Vector graphics are quite similar to images, with the major difference of how they're encoded into the document. We differentiate between `rect` elements, which are rectangles and `line` elements which are just lines.
+
+```python
+def find_vectors(data: str) -> list:
+    """Finds simple rectangles and lines."""
+    vectors = []
+    for m in re.finditer(r"(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+re", data):
+        x, y, w, h = map(float, m.groups())
+        vectors.append({
+            "type": "rect",
+            "bbox": [x, y, x + w, y + h]
+        })
+    
+    for m in re.finditer(r"(\S+)\s+(\S+)\s+m\s+(\S+)\s+(\S+)\s+l\s+S", data):
+        x1, y1, x2, y2 = map(float, m.groups())
+        vectors.append({
+            "type": "line",
+            "p1": [x1, y1],
+            "p2": [x2, y2]
+        })
+            
+    return vectors
+```
+This helps us drastically to identify tables, as well as images inside PDFs.
+<div style="display: flex">
+  <div style="width: 45%; margin-right: 5%">
+    Comparing this rendered document with the previous one make it quite obvious how the vector graphics inside the doc help us recreate the structure.<br/>
+    As you can see we can already identify all elements on the page.
+    The outer bounding box represents the full document, the lines and columns in the middle of the page represent the table and the box overlapping with the documents center we have the image.
+  </div>
+  <div style="margin-left: 5%; width: 45%">
+     <img src="/_includes/assets/2025-11-12/test-vecs.png" />
+  </div>
+</div>
+
+
+Great, this gives us an amazing base to start off. But unfortunately, things get harder and harder from here on.
+
+Our full script is getting bigger and bigger and accumulates more and more dependencies.
+Considering this, and the fact that we currently still need to decompress the incoming PDF files as initially mentioned using `qpdf`, we will now pivot to a more robust solution.
+
+## Existing solutions
+There's not yet a single library that claims to do exactly what we're doing here.
+
+Hence, we still need to put in some effort to end up with a solid solution.
+
+A brief research on the most commonly used libraries concluded that we should probably use one of these:
+- [PyMuPDF](https://github.com/pymupdf/PyMuPDF): *a high performance Python library for data extraction, analysis, conversion & manipulation of PDF (and other) documents*
+- [pdfplumber](https://github.com/jsvine/pdfplumber): *Plumb a PDF for detailed information about each char, rectangle, line, et cetera — and easily extract text and tables*
+- [Unstructured](https://github.com/Unstructured-IO/unstructured): *Convert documents to structured data effortlessly. Unstructured is open-source ETL solution for transforming complex documents into clean, structured formats for language models. Visit our website to learn more about our enterprise grade Platform product for production grade workflows, partitioning, enrichments, chunking and embedding.*
+
+| Feature          | PyMuPDF (fitz)                        | pdfplumber                             | Unstructured            |
+|------------------|---------------------------------------|----------------------------------------|-------------------------|
+| Text Extraction  | Excellent (C-Speed, Dict/JSON output) | Excellent (Visual/Layout preservation) | Good (OCR/Partitioning) |
+| Table Extraction | Good (Fast, Heuristic)                | Excellent (Configurable, Visual Debug) | Good (Auto-detection)   |
+| Vector Graphics  | Full Support (Paths to SVG)           | Limited (Lines/Rects only)             | Limited (Rasterizes)    |
+| Raster Images    | Native Extraction                     | Native Extraction                      | Native (OCR capable)    |
+| Output Format    | Dict, JSON, XML, Markdown             | JSON/CSV export                        | JSON (Element list)     |
+| Execution Speed  | 🚀 Very Fast (~0.1s/page)             | 🐢 Slow (~1-5s/page)                   | 🐢 Slow (~1.5s+/page)   |
+| License          | AGPL (Restrictive) / Commercial       | MIT (Permissive)                       | Apache 2.0 (Permissive) |
+
+We decided for now to go with [PyMuPDF](https://github.com/pymupdf/PyMuPDF) due to its performance.
+
+
+We migth later take a look at PDFPlumber for table extraction, but that's an optimization for another day.

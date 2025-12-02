@@ -802,9 +802,6 @@ World
 
 Woohoo, congrats! We managed to extract text content from our document(s)!
 
-<iframe src="https://giphy.com/embed/zQ59i1AwVXhd2chKyX" width="auto" height="250px" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-
-
 Alright, that's not fully usable for us, just yet.
 What we would actually want is apart from the text content also a form of structure, like bounding boxes or coordinates.
 
@@ -1163,8 +1160,8 @@ Great, this gives us an amazing base to start off. But unfortunately, things get
 
 Our full script is getting bigger and bigger and accumulates more and more dependencies.
 Considering this, and the fact that we currently still need to decompress the incoming PDF files as initially mentioned using `qpdf`, we will now pivot to a more robust solution.
-
-## Existing solutions
+## Putting things together
+### Supporting existing solutions
 There's not yet a single library that claims to do exactly what we're doing here.
 
 Hence, we still need to put in some effort to end up with a solid solution.
@@ -1186,5 +1183,767 @@ A brief research on the most commonly used libraries concluded that we should pr
 
 We decided for now to go with [PyMuPDF](https://github.com/pymupdf/PyMuPDF) due to its performance.
 
+### Implementation plan
+To reduce the number of calls we do to the library we will split the process into multiple steps, sharing results between them.
 
-We migth later take a look at PDFPlumber for table extraction, but that's an optimization for another day.
+1. Extract raw PDF structure, incl. Images and Vector Graphics
+2. Detect Text lines based on structure
+3. Detect Text columns based on Text Lines and structure (for tables)
+4. Detect tables based on text columns
+5. Detect text paragraphs
+6. Convert structure into easy to digest format for LLMs
+
+Only the first step uses PyMuPDF's `fitz`, everything past this step is using lightweight algorithms.
+
+Focusing on text only extraction our first step looks similar to this:
+```python
+def extract_structure(pdf_file):
+    doc = fitz.open(pdf_file)
+    structure: Dict[str, Any] = {"path": pdf_file, "pages": [], "page_count": len(doc)}
+    imgs = []
+    mat = fitz.Matrix(0.5, 0.5)
+    for pno, page in enumerate(doc):
+        pix = page.get_pixmap(matrix=mat)
+        imgs.append(pix.pil_image())
+        page_w, page_h = page.rect.width, page.rect.height
+        page_dict = {"page_number": pno + 1, "width": page_w, "height": page_h, "text": [], "images": [], "vectors": []}
+        tdict = page.get_text("dict")
+        for block in tdict.get("blocks", []):
+            if block.get("type") == 0:  # text
+                for line in block.get("lines", []):
+                    for span in line.get("spans", []):
+                        txt = span.get("text", "")
+                        if not txt.strip(): continue
+                        bbox = [round(v, 2) for v in span.get("bbox", [])]
+                        txt = normalize_text(txt)
+                        page_dict["text"].append({
+                            "text": txt, "bbox": bbox, "font": span.get("font"),
+                            "size": span.get("size"), "flags": span.get("flags"),
+                            "x0": bbox[0], "y0": bbox[1], "x1": bbox[2], "y1": bbox[3],
+                            "cx": (bbox[0] + bbox[2]) / 2.0, "cy": (bbox[1] + bbox[3]) / 2.0,
+                        })
+        structure['pages'].append(page_dict)
+    return structure, imgs
+```
+
+From reading the code you will notice that we return two variables here, the first one is the PDF's structure, the second one a list of image objects, for each page one.
+
+The structure we receive back contains information about the source file as well as the content that we were able to extract from the PDF file.
+For every page we receive an individual object that holds an array of text, images and vector graphics that are used within the specific page.
+
+Each text entry is another object that contains coordinates where the text is found on the page, as well as font information and the written text.
+```json
+{
+  "text": "The line of text",
+  "bbox": [0, 120, 0, 15],
+  "font": "Arial",
+  "size": 10,
+  "flags": "",
+  "x0": 0,
+  "y0": 0,
+  "x1": 120,
+  "y1": 15,
+  "cx": 60.0,
+  "cy": 7.5
+}
+```
+
+The page's text entities aren't sorted yet. All we have is individual text chunks that we now need to structrue again.
+
+```python
+structure, page_imgs = extract_structure('some_file.pdf')
+text_spans = structure['pages'][0]['text']
+```
+
+We use this structure, or specifically the text spans within the page structures, to detect lines within the document.
+
+For each detection step we're building a "Detector". Each detector implements a `detect` method that receives a set of extracted structure elements.
+
+For instance the `LineDetector`, which is used to identify lines of text from given text spans
+```python
+class LineDetector:
+    def detect(self, spans: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        if not spans: return []
+
+        sorted_spans = sorted(spans, key=lambda s: (s["y0"], s["x0"]))
+        lines: List[Dict[str, Any]] = []
+        heights = [s["y1"] - s["y0"] for s in spans if s["y1"] - s["y0"] > 0]
+        median_height = float(np.median(heights)) if heights else 10.0
+        line_threshold = max(2.0, median_height * 0.4)
+        current_line_spans = [sorted_spans[0]]
+        for i in range(1, len(sorted_spans)):
+            prev_s, curr_s = current_line_spans[-1], sorted_spans[i]
+            if abs(curr_s["cy"] - prev_s["cy"]) <= line_threshold:
+                current_line_spans.append(curr_s)
+            else:
+                all_x0, all_y0 = [s['x0'] for s in current_line_spans], [s['y0'] for s in current_line_spans]
+                all_x1, all_y1 = [s['x1'] for s in current_line_spans], [s['y1'] for s in current_line_spans]
+                bbox = [min(all_x0), min(all_y0), max(all_x1), max(all_y1)]
+                lines.append({
+                    "spans": current_line_spans,
+                    "text": " ".join(s['text'] for s in sorted(current_line_spans, key=lambda s: s['x0'])),
+                    "bbox": bbox, "x0": bbox[0], "y0": bbox[1], "x1": bbox[2], "y1": bbox[3],
+                    "cx": (bbox[0] + bbox[2]) / 2, "cy": (bbox[1] + bbox[3]) / 2,
+                })
+                current_line_spans = [curr_s]
+        if not current_line_spans:
+            return lines
+
+        all_x0, all_y0 = [s['x0'] for s in current_line_spans], [s['y0'] for s in current_line_spans]
+        all_x1, all_y1 = [s['x1'] for s in current_line_spans], [s['y1'] for s in current_line_spans]
+        bbox = [min(all_x0), min(all_y0), max(all_x1), max(all_y1)]
+        lines.append({
+            "spans": current_line_spans,
+            "text": " ".join(s['text'] for s in sorted(current_line_spans, key=lambda s: s['x0'])),
+            "bbox": bbox, "x0": bbox[0], "y0": bbox[1], "x1": bbox[2], "y1": bbox[3],
+            "cx": (bbox[0] + bbox[2]) / 2, "cy": (bbox[1] + bbox[3]) / 2,
+        })
+        return lines
+```
+This merges text that is aligned on the same horizontal line based on coordinates within the extracted text spans based on their `x0` values. Which will yield lines of text.
+```python
+LineDetector().detect(text_spans)
+```
+This covers `1.` (text only) and `2.`. For the remaining detection steps we implemented the detectors `TableDetector` and `ColumnDetector` and extended our original structure extraction method with the logic for images and vector graphics.
+
+### Transforming the structure
+Once the full structure is extracted we need to transform it into a format (`7.`) that can be easily used by Large Language Models like [Gemma](https://huggingface.co/google/gemma-3-4b-it-qat-q4_0-gguf).
+
+This is rather a boring excercise. What we basically do is convert any structure into valid Markdown, if possible and create bits of information that are easier to digest by the model.
+
+The main point to state here is that we transform tables into a nice markdown structure and remove unnecessary content/bloat from our JSON structure.
+
+## Wrapping up
+For the final solution we need to install the following dependencies:
+- `fitz` (aka. `PyMuPDF`)
+- `scikit-learn`
+- `Pillow`
+- `numpy`
+
+You can find the full pre-processing implementation here:
+<details>
+<summary>Full implementation</summary>
+
+<details>
+<summary>Implementation PDFParser</summary>
+
+```python
+import fitz
+import re
+from sklearn.cluster import AgglomerativeClustering
+from typing import List, Dict, Any
+from PIL import Image
+import numpy as np
+
+
+def unescape_text(text):
+    """
+    Converts literal unicode escape sequences (like \\u0130) into actual characters (İ).
+    This fixes issues where LLMs output escaped JSON strings.
+    """
+    # Pattern to match literal \\u followed by 4 hex digits (e.g. \\u0130)
+    pattern = r'\\u([0-9a-fA-F]{4})'
+
+    def replace_match(match):
+        try:
+            return chr(int(match.group(1), 16))
+        except ValueError:
+            return match.group(0)
+
+    return re.sub(pattern, replace_match, str(text))
+
+def normalize_text(text):
+    """
+    Robust normalization: 
+    1. Unescape unicode characters (fix \\uXXXX artifacts)
+    2. Strip whitespace
+    3. Lowercase
+    4. Collapse multiple spaces
+    """
+    # Step 1: Fix broken unicode (e.g. "EYYUB\\u0130" -> "EYYUBİ")
+    clean = unescape_text(text)
+
+    # Step 2: Standard normalization
+    return re.sub(r'\s+', ' ', clean).strip()
+
+
+def group_lines_to_paragraphs(lines: List[Dict[str, Any]]) -> List[List[Dict[str, Any]]]:
+    if not lines: return []
+    sorted_lines = sorted(lines, key=lambda l: l["y0"])
+    heights = [l["y1"] - l["y0"] for l in sorted_lines if l["y1"] - l["y0"] > 0]
+    if not heights: return []
+    median_height = float(np.median(heights))
+    gap_threshold = median_height * 0.6
+    paragraphs: List[List[Dict[str, Any]]] = []
+    current_para: List[Dict[str, Any]] = [sorted_lines[0]]
+    for i in range(1, len(sorted_lines)):
+        prev_ln, curr_ln = sorted_lines[i-1], sorted_lines[i]
+        gap = curr_ln["y0"] - prev_ln["y1"]
+        prev_end_char = prev_ln["text"].strip()[-1] if prev_ln["text"].strip() else ""
+        is_punct_break = prev_end_char in {".", "!", "?", ":"} and gap > (median_height * 0.2)
+        if gap > gap_threshold or is_punct_break:
+            paragraphs.append(current_para)
+            current_para = [curr_ln]
+        else:
+            current_para.append(curr_ln)
+    if current_para: paragraphs.append(current_para)
+    return paragraphs
+
+
+class LineDetector:
+    def detect(self, spans: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        if not spans: return []
+
+        sorted_spans = sorted(spans, key=lambda s: (s["y0"], s["x0"]))
+        lines: List[Dict[str, Any]] = []
+        heights = [s["y1"] - s["y0"] for s in spans if s["y1"] - s["y0"] > 0]
+        median_height = float(np.median(heights)) if heights else 10.0
+        line_threshold = max(2.0, median_height * 0.4)
+        current_line_spans = [sorted_spans[0]]
+        for i in range(1, len(sorted_spans)):
+            prev_s, curr_s = current_line_spans[-1], sorted_spans[i]
+            if abs(curr_s["cy"] - prev_s["cy"]) <= line_threshold:
+                current_line_spans.append(curr_s)
+            else:
+                all_x0, all_y0 = [s['x0'] for s in current_line_spans], [s['y0'] for s in current_line_spans]
+                all_x1, all_y1 = [s['x1'] for s in current_line_spans], [s['y1'] for s in current_line_spans]
+                bbox = [min(all_x0), min(all_y0), max(all_x1), max(all_y1)]
+                lines.append({
+                    "spans": current_line_spans,
+                    "text": " ".join(s['text'] for s in sorted(current_line_spans, key=lambda s: s['x0'])),
+                    "bbox": bbox, "x0": bbox[0], "y0": bbox[1], "x1": bbox[2], "y1": bbox[3],
+                    "cx": (bbox[0] + bbox[2]) / 2, "cy": (bbox[1] + bbox[3]) / 2,
+                })
+                current_line_spans = [curr_s]
+        if current_line_spans:
+            all_x0, all_y0 = [s['x0'] for s in current_line_spans], [s['y0'] for s in current_line_spans]
+            all_x1, all_y1 = [s['x1'] for s in current_line_spans], [s['y1'] for s in current_line_spans]
+            bbox = [min(all_x0), min(all_y0), max(all_x1), max(all_y1)]
+            lines.append({
+                "spans": current_line_spans,
+                "text": " ".join(s['text'] for s in sorted(current_line_spans, key=lambda s: s['x0'])),
+                "bbox": bbox, "x0": bbox[0], "y0": bbox[1], "x1": bbox[2], "y1": bbox[3],
+                "cx": (bbox[0] + bbox[2]) / 2, "cy": (bbox[1] + bbox[3]) / 2,
+            })
+        return lines
+
+
+class ColumnDetector:
+    def detect(self, spans: List[Dict[str, Any]], max_columns: int = 4, gap_threshold: float | None = None) -> List[int]:
+        if not spans: return []
+        centers = np.array([s["cx"] for s in spans]).reshape(-1, 1)
+        if gap_threshold is None:
+            widths = np.array([s["x1"] - s["x0"] for s in spans])
+            median_w = np.median(widths) if widths.size else 50
+            gap_threshold = max(30.0, median_w * 0.6)
+        clustering = AgglomerativeClustering(n_clusters=None, distance_threshold=gap_threshold, linkage="ward")
+        labels = clustering.fit_predict(centers)
+        unique_labels, means = np.unique(labels, return_counts=False), [np.mean(centers[labels == l]) for l in np.unique(labels)]
+        sorted_labels = [label for _, label in sorted(zip(means, unique_labels))]
+        label_to_col = {label: idx for idx, label in enumerate(sorted_labels)}
+        cols = [min(label_to_col[l], max_columns - 1) for l in labels]
+        return cols
+
+class TableDetector:
+    def detect(self, lines: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Detects tables by finding consecutive lines that have multiple segments 
+        which vertically align with each other.
+        """
+        if len(lines) < 2:
+            return []
+
+        # 1. Analyze every line to see if it has "columns" (segments)
+        # We use a looser threshold (1.5 spaces) to catch tight tables
+        line_structures = []
+        for ln in lines:
+            segs = self.get_line_segments(ln, space_scale=1.5)
+            line_structures.append({
+                "line_obj": ln,
+                "segments": segs,
+                "is_multi_col": len(segs) > 1
+            })
+
+        tables = []
+        current_table_lines = []
+        
+        # 2. Group consecutive lines that look like they belong to the same grid
+        for i in range(len(line_structures)):
+            curr = line_structures[i]
+            prev = line_structures[i-1] if i > 0 else None
+
+            is_table_part = False
+            
+            if curr["is_multi_col"]:
+                # If it has columns, check if it aligns with the previous table line
+                if current_table_lines:
+                    prev_table_line = current_table_lines[-1]
+                    # Check alignment: Do at least 50% of segments align with the previous line?
+                    matches = 0
+                    for c_seg in curr["segments"]:
+                        for p_seg in prev_table_line["segments"]:
+                            if self.segments_overlap(c_seg, p_seg):
+                                matches += 1
+                                break
+                    if matches > 0:
+                        is_table_part = True
+                else:
+                    # Start of a potential table
+                    # Heuristic: Must be followed by another multi-col line to be a table
+                    if i + 1 < len(line_structures):
+                        next_ln = line_structures[i+1]
+                        if next_ln["is_multi_col"]:
+                            # Check alignment with next
+                            matches = 0
+                            for c_seg in curr["segments"]:
+                                for n_seg in next_ln["segments"]:
+                                    if self.segments_overlap(c_seg, n_seg):
+                                        matches += 1
+                                        break
+                            if matches > 0:
+                                is_table_part = True
+
+            # 3. Handle Vertical Isolation (Whitespace heuristic)
+            # If we have a table going, allows single-column lines if they are "sandwiched" closely
+            if not is_table_part and current_table_lines:
+                # Allow a single line break or a header line inside a table 
+                # if the vertical gap is small
+                gap = curr["line_obj"]["y0"] - current_table_lines[-1]["line_obj"]["y1"]
+                if gap < 15.0: # Small vertical gap threshold
+                    # It might be a wrapped row. 
+                    # (Simplification: for now, strict visual alignment is safer)
+                    pass
+
+            if is_table_part:
+                current_table_lines.append(curr)
+            else:
+                if len(current_table_lines) >= 2:
+                    tables.append(self.process_table_block(current_table_lines))
+                current_table_lines = []
+
+        # Catch trailing table
+        if len(current_table_lines) >= 2:
+            tables.append(self.process_table_block(current_table_lines))
+
+        return tables
+
+    def process_table_block(self, block_structs: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Converts a list of raw line structures into a clean table dictionary.
+        Recalculates columns based on the aggregate of all lines in the block.
+        """
+        # 1. Collect all x-intervals from all lines
+        all_segments = []
+        for item in block_structs:
+            all_segments.extend(item["segments"])
+        
+        # 2. Determine global column boundaries for this block using X-clustering
+        # (We reuse the logic from the old script here but restricted to this block)
+        if not all_segments: return {}
+        
+        xs = np.array([(s["x0"] + s["x1"])/2 for s in all_segments]).reshape(-1, 1)
+        # Cluster centers to find column buckets
+        clustering = AgglomerativeClustering(n_clusters=None, distance_threshold=20, linkage="ward")
+        labels = clustering.fit_predict(xs)
+        
+        # Map unique labels to sorted x-positions
+        unique_labels = np.unique(labels)
+        col_centers = []
+        for l in unique_labels:
+            center = np.mean(xs[labels == l])
+            col_centers.append((l, center))
+        col_centers.sort(key=lambda x: x[1])
+        label_map = {l: i for i, (l, c) in enumerate(col_centers)}
+        num_cols = len(unique_labels)
+
+        # 3. Build the grid
+        rows = []
+        for item in block_structs:
+            row_cells = [""] * num_cols
+            for seg in item["segments"]:
+                # Find which column this segment belongs to
+                seg_cx = (seg["x0"] + seg["x1"]) / 2
+                # Find closest column center (naive but effective given the clustering)
+                closest_lbl = min(unique_labels, key=lambda l: abs(np.mean(xs[labels==l]) - seg_cx))
+                col_idx = label_map[closest_lbl]
+                
+                # Append text (handle overlaps)
+                current_text = row_cells[col_idx]
+                row_cells[col_idx] = (current_text + " " + seg["text"]).strip()
+            rows.append(list(filter(bool, row_cells)))
+
+        # 4. Calculate BBox
+        all_x0 = [l["line_obj"]["x0"] for l in block_structs]
+        all_y0 = [l["line_obj"]["y0"] for l in block_structs]
+        all_x1 = [l["line_obj"]["x1"] for l in block_structs]
+        all_y1 = [l["line_obj"]["y1"] for l in block_structs]
+        
+        bbox = [min(all_x0), min(all_y0), max(all_x1), max(all_y1)]
+
+        return {"rows": rows, "bbox": [round(v, 2) for v in bbox]}
+
+    @staticmethod
+    def segments_overlap(seg1: Dict[str, Any], seg2: Dict[str, Any], tolerance: float = 5.0) -> bool:
+        """Checks if two segments vertically align (share x-coordinates)."""
+        return max(0, min(seg1["x1"], seg2["x1"]) - max(seg1["x0"], seg2["x0"])) > tolerance
+
+    def get_line_segments(self, line: Dict[str, Any], space_scale: float = 2.0) -> List[Dict[str, Any]]:
+        """
+        Breaks a line into visual segments based on horizontal gaps.
+        User Heuristic: Gap > space character.
+        """
+        spans = sorted(line["spans"], key=lambda s: s["x0"])
+        if not spans:
+            return []
+
+        # Calculate an approximate space width for this specific line based on font size
+        # Average char width is roughly height / 2. A wide gap is ~ 2 to 3 spaces.
+        avg_font_size = np.mean([s["size"] for s in spans]) if spans else 10.0
+        gap_threshold = avg_font_size * 0.6 * space_scale 
+
+        segments = []
+        current_segment = [spans[0]]
+        
+        for i in range(1, len(spans)):
+            prev = spans[i-1]
+            curr = spans[i]
+            gap = curr["x0"] - prev["x1"]
+            
+            if gap > gap_threshold:
+                # Gap detected: close current segment and start new
+                segments.append(current_segment)
+                current_segment = [curr]
+            else:
+                current_segment.append(curr)
+        segments.append(current_segment)
+
+        # Convert list of spans into simplified segment dicts
+        segment_dicts = []
+        for seg in segments:
+            x0 = min(s["x0"] for s in seg)
+            x1 = max(s["x1"] for s in seg)
+            text = " ".join(s["text"] for s in seg)
+            segment_dicts.append({"x0": x0, "x1": x1, "text": text, "spans": seg})
+                
+        return segment_dicts
+
+
+class PDFParser:
+    def __init__(self, pdf_file: str | bytes):
+        self.pdf_file = pdf_file
+        self.table_detector = TableDetector()
+        self.line_detector = LineDetector()
+        self.column_detector = ColumnDetector()
+
+    def create_structure(self) -> Dict[str, Any]:
+        struct, imgs = self.extract_pdf_structure()
+        for page in struct.get("pages", []):
+            spans = page.get("text", [])
+            if not spans: continue
+
+            lines = self.line_detector.detect(spans)
+            col_labels = self.column_detector.detect(spans)
+            for s, c in zip(spans, col_labels): s["col"] = int(c)
+            for ln in lines:
+                span_cols = [sp.get("col", 0) for sp in ln.get("spans", [])]
+                ln["col"] = int(max(set(span_cols), key=span_cols.count)) if span_cols else 0
+
+            page["lines"] = lines
+            # Detect tables FIRST
+            page["tables"] = self.table_detector.detect(lines)
+
+            # Exclude table lines from paragraph analysis
+            table_line_indices = set()
+            for tbl in page['tables']:
+                bx0, by0, bx1, by1 = tbl.get("bbox", [0, 0, 0, 0])
+                for i, ln in enumerate(lines):
+                    if (by0 <= ln['cy'] <= by1) and (max(bx0, ln['x0']) < min(bx1, ln['x1'])):
+                        table_line_indices.add(i)
+
+            non_table_lines = [ln for i, ln in enumerate(lines) if i not in table_line_indices]
+            
+            # Group remaining lines into paragraphs per column
+            paragraphs_by_col: Dict[int, List[List[Dict[str, Any]]]] = {}
+            cols = sorted(list(set(ln.get("col", 0) for ln in non_table_lines)))
+            for col_id in cols:
+                col_lines = [ln for ln in non_table_lines if ln.get("col", 0) == col_id]
+                if col_lines:
+                    paragraphs_by_col[col_id] = group_lines_to_paragraphs(col_lines)
+
+            page["paragraphs_by_col"] = paragraphs_by_col
+        return struct, imgs
+
+    def extract_pdf_structure(self) -> Dict[str, Any]:
+        structure: Dict[str, Any] = {"path": self.pdf_file if isinstance(self.pdf_file, str) else '', "pages": []}
+        try:
+            doc = fitz.open(self.pdf_file)
+        except Exception as e:
+            try:
+                doc = fitz.open('pdf', self.pdf_file)
+            except Exception as ex:
+                raise RuntimeError(f"Failed to open PDF '{self.pdf_file}': {ex}")
+
+        structure["page_count"] = len(doc)
+        imgs = []
+        mat = fitz.Matrix(0.5, 0.5)
+        for pno, page in enumerate(doc):
+            pix = page.get_pixmap(matrix=mat)
+            imgs.append(pix.pil_image())
+            page_w, page_h = page.rect.width, page.rect.height
+            page_dict = {"page_number": pno + 1, "width": page_w, "height": page_h, "text": [], "images": [], "vectors": []}
+            try:
+                tdict = page.get_text("dict")
+                for block in tdict.get("blocks", []):
+                    if block.get("type") == 0:  # text
+                        for line in block.get("lines", []):
+                            for span in line.get("spans", []):
+                                txt = span.get("text", "")
+                                if not txt.strip(): continue
+                                bbox = [round(v, 2) for v in span.get("bbox", [])]
+                                txt = normalize_text(txt)
+                                page_dict["text"].append({
+                                    "text": txt, "bbox": bbox, "font": span.get("font"),
+                                    "size": span.get("size"), "flags": span.get("flags"),
+                                    "x0": bbox[0], "y0": bbox[1], "x1": bbox[2], "y1": bbox[3],
+                                    "cx": (bbox[0] + bbox[2]) / 2.0, "cy": (bbox[1] + bbox[3]) / 2.0,
+                                })
+            except Exception as e:
+                print(f"[warn] text extraction failed on page {pno+1}: {e}")
+            try:
+                img_idx = 0
+                for img in page.get_images(full=True):
+                    xref = img[0]
+                    try:
+                        base = doc.extract_image(xref)
+                        img_bytes, img_ext = base["image"], base.get("ext", "png")
+                        img_bbox = page.get_image_bbox(img).irect
+                        page_dict["images"].append({
+                            "bbox": [img_bbox.x0, img_bbox.y0, img_bbox.x1, img_bbox.y1],
+                            "xref": xref,
+                            "ext": img_ext,
+                            "width": base.get("width"), "height": base.get("height")
+                        })
+                        img_idx += 1
+                    except Exception as e:
+                        print(f"[warn] could not extract image xref {xref} on page {pno+1}: {e}")
+            except Exception as e:
+                print(f"[warn] image extraction failed on page {pno+1}: {e}")
+            try:
+                for d in page.get_drawings():
+                    r = d.get("rect")
+                    if r:
+                        bbox = [round(r.x0, 2), round(r.y0, 2), round(r.x1, 2), round(r.y1, 2)]
+                        page_dict["vectors"].append({"type": "rect", "bbox": bbox, "width": d.get("width")})
+            except Exception:
+                pass
+            structure["pages"].append(page_dict)
+        doc.close()
+        return structure, imgs
+```
+</details>
+
+<details>
+<summary>Implementation StructureCreator</summary>
+
+```python
+import json
+
+
+class StructureCreator:
+    def transform(self, input_data):
+        """
+        Transforms raw PDF JSON into a clean, grounded structure for Vision LLMs.
+        """
+        # If input is a string, parse it; otherwise assume it's a dict
+        if isinstance(input_data, str):
+            data = json.loads(input_data)
+        else:
+            data = input_data
+
+        transformed_doc = {
+            "filename": data.get("path", "unknown_file"),
+            "total_pages": len(data.get("pages", [])),
+            "pages": []
+        }
+
+        for page in data.get("pages", []):
+            page_width = page.get("width")
+            page_height = page.get("height")
+            
+            structured_page = {
+                "page_number": page.get("page_number"),
+                "dimensions": [int(page_width), int(page_height)],
+                "content": []
+            }
+
+            # 1. Process Tables (High Priority for grounding)
+            # We define tables first so we can potentially filter out text that exists inside tables
+            # to avoid duplication (optional, but recommended).
+            table_bboxes = []
+            for table in page.get("tables", []):
+                bbox = [int(n) for n in table.get("bbox", [0,0,0,0])]
+                table_bboxes.append(bbox)
+                
+                # Convert table rows to Markdown format
+                md_table = self._json_rows_to_markdown(table.get("rows", []))
+                
+                structured_page["content"].append({
+                    "type": "table",
+                    "bbox": bbox,
+                    "format": "markdown",
+                    "data": md_table
+                })
+
+            # 2. Process Images
+            for img in page.get("images", []):
+                structured_page["content"].append({
+                    "type": "image",
+                    "bbox": [int(n) for n in img.get("bbox", [0,0,0,0])],
+                    "source_filename": img.get("filename", "embedded")
+                })
+
+            # 3. Process Text Lines
+            # We prefer 'lines' over 'text' spans because they are pre-assembled.
+            for line in page.get("lines", []):
+                line_bbox = [int(n) for n in line.get("bbox", [0,0,0,0])]
+                
+                # Simple collision detection: If this text line is inside a table we already processed,
+                # we might want to skip it to reduce noise. 
+                # (Logic: Center point of line is inside a table bbox)
+                cx = line.get("cx", line_bbox[0])
+                cy = line.get("cy", line_bbox[1])
+                
+                is_inside_table = False
+                for t_box in table_bboxes:
+                    if (t_box[0] <= cx <= t_box[2]) and (t_box[1] <= cy <= t_box[3]):
+                        is_inside_table = True
+                        break
+                
+                if not is_inside_table:
+                    structured_page["content"].append({
+                        "type": "text",
+                        "bbox": line_bbox,
+                        "text": line.get("text", "").strip()
+                    })
+            structured_page['content'] = sorted(
+                structured_page['content'],
+                key=lambda x: x['bbox'][1]
+            )
+
+            transformed_doc["pages"].append(structured_page)
+
+        return transformed_doc
+
+    def _json_rows_to_markdown(self, rows):
+        """Helper to convert list of lists into a Markdown table string."""
+        if not rows:
+            return ""
+        
+        try:
+            # headers are usually the first row
+            headers = rows[0]
+            # Determine if headers are valid strings
+            clean_headers = [str(h).replace("\n", " ") for h in headers]
+            
+            md_lines = []
+            # Header row
+            md_lines.append("| " + " | ".join(clean_headers) + " |")
+            # Separator row
+            md_lines.append("| " + " | ".join(["---"] * len(headers)) + " |")
+            
+            # Body rows
+            for row in rows[1:]:
+                clean_row = [str(cell).replace("\n", " ") if cell is not None else "" for cell in row]
+                md_lines.append("| " + " | ".join(clean_row) + " |")
+                
+            return "\n".join(md_lines)
+        except Exception:
+            return "Error generating table content"
+```
+
+</details>
+</details>
+
+During inference we first use the `PDFParser`, then the `StructureCreator` to build the payload that is then being wrapped into a prompt dedicated for the document.
+
+For example for a running instance of [llama.cpp](https://github.com/ggml-org/llama.cpp)'s server
+
+```python
+import requests
+import base64
+from io import BytesIO
+
+# from ... import PDFParser
+# from ... import StructureCreator
+
+def convert_pdf(self, file_content):
+    parser = PDFParser(file_content)
+    res, pdf_pages = parser.create_structure()
+    creator = StructureCreator()
+    final = creator.transform(res)
+    user_content = []
+    for img in pdf_pages:
+        buffered = BytesIO()
+        img.save(buffered, format='jpeg')
+        base64_image = base64.b64encode(buffered.getvalue()).decode('utf-8')
+        user_content.append({
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/jpeg;base64,{base64_image}"
+            }
+        })
+    return final, user_content
+
+structure, images = convert_pdf('mypdf.pdf')
+llama_cpp_host = 'http://localhost:8080/v1/chat/completions'
+res = requests.post(
+  llama_cpp_host,
+  json={
+    'messages': images + [
+      {
+        'role': 'user',
+        'content': [
+          {
+            'type': 'text',
+            'text': f'Transcribe the full document based on this structure definition: {json.dumps(structure)}'
+          }
+        ]
+      }
+    ]
+  }
+)
+print(res.json()['choices'][0]['messages']['content'])
+```
+
+This should yield more reliable results than just using image data.
+We also ran a small set of experimental benchmarks.
+
+You can see the results below, underneath you will find a legend for the charts.
+
+![Radar Chart](/_includes/assets/2025-11-12/radar_chart-new.png)
+![Comparison chart](/_includes/assets/2025-11-12/comparison_chart-new.png)
+
+<div style="padding-left: 10rem;">
+
+| Method name |             Description              |
+|:-----------:|:------------------------------------:|
+|  Method A   |        Gemma with Image input        |
+|  Method B   | Gemma with Image and Structure input |
+|  Method C   |      Gemma with Structure input      |
+|  Method D   |        Gemini with native PDF        |
+|  Method E   |   Gemini with native PDF and JSON    |
+
+</div>
+
+## Conclusion
+Since my first self rendered LaTeX document I wanted to dig deeper into the domain of PDFs.
+With this post I finally managed to do so.
+
+We looked into simple elements contained inside a PDF, learned about compression and streaming a little and got our hands dirty by reading de-compressed files manually.
+
+Once we had a better understanding of the meta data inside PDFs we pivoted to the implementation state. Due to the fact that explanations would be cumbersome and boring and dry we wrapped up things quickly, but still provided the final implementation of readers to play around with.
+
+For the future and to move forward with the implementation I would suggest to look deeper into table parsing.
+
+Apart from that, this approach currently only works with correct PDF documents. No further analysis is performed on embedded graphics (vector or image).
+To accelerate the performance of LLMs with vision capabilities I would suggest using a model like [DocLing](https://www.docling.ai/) or any other vision LLM that can produce document structure.

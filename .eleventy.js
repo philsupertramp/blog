@@ -4,7 +4,7 @@ const syntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
 
 module.exports = function(eleventyConfig) {
     const markdown = require('./src/utils/markdown')
-    eleventyConfig.setLibrary('md', markdown)
+    eleventyConfig.setLibrary('md', markdown.markdown)
     eleventyConfig.addPlugin(syntaxHighlight);
 
     const { DateTime } = require("luxon");
@@ -19,6 +19,7 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/_includes/assets/*");
     eleventyConfig.addPassthroughCopy("src/_includes/assets/2024-04-14/*");
     eleventyConfig.addPassthroughCopy("src/_includes/assets/2025-08-21/*");
+    eleventyConfig.addPassthroughCopy("src/_includes/assets/2025-11-12/*");
 
     eleventyConfig.addPlugin(mathjaxPlugin, {
       tex: {

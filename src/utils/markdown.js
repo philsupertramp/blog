@@ -1,5 +1,7 @@
-const Image = require('@11ty/eleventy-img')
-const markdown = require('markdown-it')({
+import Image from '@11ty/eleventy-img'
+import markdownit from 'markdown-it'
+
+const markdown = markdownit({
   html: true
 });
 markdown.renderer.rules.image = function (tokens, idx, options, env, self) {
@@ -76,5 +78,3 @@ markdown.renderer.rules.image = function (tokens, idx, options, env, self) {
   }
   return generated
 }
-
-module.exports = markdown;

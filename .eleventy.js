@@ -20,6 +20,9 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/_includes/assets/2024-04-14/*");
     eleventyConfig.addPassthroughCopy("src/_includes/assets/2025-08-21/*");
     eleventyConfig.addPassthroughCopy("src/_includes/assets/2025-11-12/*");
+    eleventyConfig.addPassthroughCopy("src/_includes/assets/2025-12-05/*");
+    eleventyConfig.addPassthroughCopy("src/_includes/assets/2025-12-25/*");
+    eleventyConfig.addPassthroughCopy("src/_includes/assets/2026-02-01/*");
 
     eleventyConfig.addPlugin(mathjaxPlugin, {
       tex: {

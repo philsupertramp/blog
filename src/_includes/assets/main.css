@@ -30,7 +30,7 @@ figcaption {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 .img-list > p {
-  display: none;
+  /* display: none; */
 }
 .img-list > figure > picture > img {
   width: 100%;

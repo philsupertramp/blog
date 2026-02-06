@@ -26,7 +26,7 @@ One of my biggest problems from the beginning was to decide between packages. I 
 huge pile of blog posts about which package should be used in what some kind of case, but mostly it is opinion based. What I did not know was the fact that there
 could be packages which are better to use on frontend and packages you should definitely not use in your
 frontend application. Sucks, huh? I was searching for an extended Date API. As mentioned in my previous [blog
-post](/old-blog/learning-react-the-hard-way-part-3) each of my applications depends on calculating a bunch of dates in different
+post](/old-blog/learning-react-the-hard-way-part-3/) each of my applications depends on calculating a bunch of dates in different
 units. For example adding 2 years to a date, or to determine if a user is above 18 or not. Basically
 all that stuff we learned in elementary school. But not for computers since they know how to use logical and
 mathematical operators by themselves they decided to drop out of school.

@@ -17,7 +17,9 @@ module.exports = function(eleventyConfig) {
     });
 
     eleventyConfig.addPassthroughCopy("src/_includes/assets/*");
+    eleventyConfig.addPassthroughCopy("src/_includes/assets/**");
     eleventyConfig.addPassthroughCopy("src/_includes/assets/2024-04-14/*");
+    eleventyConfig.addPassthroughCopy("src/_includes/assets/2024-05-12/*");
     eleventyConfig.addPassthroughCopy("src/_includes/assets/2025-08-21/*");
     eleventyConfig.addPassthroughCopy("src/_includes/assets/2025-11-12/*");
     eleventyConfig.addPassthroughCopy("src/_includes/assets/2025-12-05/*");

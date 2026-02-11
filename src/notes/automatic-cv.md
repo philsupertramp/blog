@@ -311,3 +311,4 @@ In case you're interested in my final solution head over to my [github profile-r
 It includes the python script, yaml config and the template file as well as a github action CI/CD that builds the whole CV.
 
 That being said, good luck with your CV and in case you have questions feel free to reach out to me :-)
+Oh and while you're here and in case you're interested, I explained the PD(F) format a bit more in detailed in an older article [Document Processing In The Time of Artificial Intelligence](/posts/document-processing-in-a-time-of-ai/), in case you are interested!

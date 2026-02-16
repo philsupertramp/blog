@@ -1,7 +1,6 @@
 ---
 tags:
  - note
- - published
 title: "[WIP] Weedar: my first embedded systems project"
 layout: mylayout.njk
 author: Philipp

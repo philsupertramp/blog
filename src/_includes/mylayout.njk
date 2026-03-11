@@ -2,29 +2,39 @@
 title: My dope Blog
 ---
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{ description }}">
-    <meta name="author" content="{{author}}">
-    <meta name="title" content="{{ title }}">
-    <title>{{ title }}</title>
+    
+    <!-- All SEO meta tags generated automatically -->
+   {% seoMetaTags page.url, title, description, date %}
+    
+    <title>{{ title }} | Phil's Blog</title>
     <link rel="apple-touch-icon" sizes="180x180" href="{{ '/_includes/assets/apple-touch-icon.png' | url }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ '/_includes/assets/favicon-32x32.png' | url }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ '/_includes/assets/favicon-16x16.png' | url }}">
     <link rel="manifest" href="{{ '/_includes/assets/site.webmanifest' | url }}">
-    <link rel="stylesheet" href="{{ '/_includes/assets/main.css' | url}}">
+    <link rel="stylesheet" href="{{ '/_includes/assets/main.css' | url }}">
     <link rel="stylesheet" href="{{ '/_includes/assets/prism-one-light.css' | url}}">
-  </head>
-  <body>
-    <div>
-      <div style="position: fixed"><a href="{{ '/' | url }}">Back</a></div>
-      <div class="content">
-        <h1 class="title">{{ title }}</h1>
-        {{ content | safe }}
-      </div>
-    </div>
-  </body>
+
+</head>
+<body>
+    <div style="position: fixed"><a href="{{ '/' | url }}">Back</a></div>
+    <article>
+        <header>
+            <h1>{{ title }}</h1>
+            {% if author and date %}
+            <div class="post-meta">
+                <span>By {{ author }}</span>
+                <time datetime="{{ date | schemaDate }}">{{ date | formatDate }}</time>
+            </div>
+            {% endif %}
+        </header>
+        <main>
+            {{ content | safe }}
+        </main>
+    </article>
+</body>
 </html>

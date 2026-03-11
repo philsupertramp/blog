@@ -1,6 +1,7 @@
 const mathjaxPlugin = require("eleventy-plugin-mathjax");
 const directoryOutputPlugin = require("@11ty/eleventy-plugin-directory-output");
 const syntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
+const seoModule = require('./src/utils/seo-module');
 
 module.exports = function(eleventyConfig) {
     const markdown = require('./src/utils/markdown')
@@ -14,6 +15,51 @@ module.exports = function(eleventyConfig) {
     });
     eleventyConfig.addFilter("notesUrl", (slug) => {
       return `/notes/${slug}/`;
+    });
+
+    // ============ SEO FILTERS ============
+    eleventyConfig.addFilter("schemaDate", (date) => {
+      return new Date(date).toISOString();
+    });
+
+    eleventyConfig.addFilter("metaDescription", (text, maxLength = 155) => {
+      return seoModule.generateMetaDescription(text, maxLength);
+    });
+
+    eleventyConfig.addFilter("escapeHtml", (text) => {
+      return seoModule.escapeHtml(text);
+    });
+
+    eleventyConfig.addFilter("formatDate", (date) => {
+      return seoModule.formatDate(date);
+    });
+
+    eleventyConfig.addFilter("canonical", (pageUrl) => {
+      return seoModule.getCanonicalUrl(pageUrl);
+    });
+
+    // ============ SEO SHORTCODES ============
+    eleventyConfig.addShortcode("blogPostingSchema", (page, post) => {
+      const schema = seoModule.generateBlogPostingSchema(page, post);
+      return `<script type="application/ld+json">\n${JSON.stringify(schema, null, 2)}\n</script>`;
+    });
+
+    eleventyConfig.addShortcode("personSchema", (author) => {
+      const schema = seoModule.generatePersonSchema(author);
+      return `<script type="application/ld+json">\n${JSON.stringify(schema, null, 2)}\n</script>`;
+    });
+
+    eleventyConfig.addShortcode("seoMetaTags", (pageUrl, title, description, author, date) => {
+      // Create a post-like object from the individual parameters
+      const post = {
+        title: title || '',
+        description: description || '',
+        author: author || 'Philipp',
+        date: date || new Date(),
+        tags: []
+      };
+      const page = { url: pageUrl };
+      return seoModule.renderAllSeoTags(page, post);
     });
 
     eleventyConfig.addPassthroughCopy("src/_includes/assets/*");

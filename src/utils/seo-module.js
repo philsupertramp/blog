@@ -13,11 +13,11 @@ const SITE_NAME = "Phil's Blog";
 function generateBlogPostingSchema(page, post) {
   // Handle both post.data and direct properties
   const data = (post && post.data) || post || {};
+  const author_name = data.author || DEFAULT_AUTHOR;
   const {
     title = '',
     description = '',
     date = new Date(),
-    author = DEFAULT_AUTHOR,
     tags = []
   } = data;
 
@@ -30,7 +30,7 @@ function generateBlogPostingSchema(page, post) {
     dateModified: date.toISOString(),
     author: {
       '@type': 'Person',
-      name: author
+      name: author_name,
     },
     publisher: {
       '@type': 'Organization',
@@ -107,6 +107,7 @@ function getMetaTags(page, post) {
 
   const metaDescription = generateMetaDescription(title, description);
   const canonicalUrl = getCanonicalUrl(page.url);
+  const author_name = data.author || DEFAULT_AUTHOR;
 
   return {
     description: metaDescription,
@@ -119,7 +120,8 @@ function getMetaTags(page, post) {
     twitterTitle: title,
     twitterDescription: metaDescription,
     articlePublished: date.toISOString(),
-    articleModified: date.toISOString()
+    articleModified: date.toISOString(),
+    author: author_name,
   };
 }
 
@@ -142,7 +144,7 @@ function renderMetaTags(page, post) {
     twitterDescription: `<meta name="twitter:description" content="${escapeHtml(tags.twitterDescription)}">`,
     articlePublished: `<meta property="article:published_time" content="${tags.articlePublished}">`,
     articleModified: `<meta property="article:modified_time" content="${tags.articleModified}">`,
-    articleAuthor: `<meta property="article:author" content="${escapeHtml(DEFAULT_AUTHOR)}">`
+    articleAuthor: `<meta property="article:author" content="${tags.author}">`
   };
 }
 

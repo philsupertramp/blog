@@ -74,7 +74,6 @@ module.exports = function(eleventyConfig) {
 
     eleventyConfig.addPlugin(mathjaxPlugin, {
       tex: {
-        processEscapes: false,
       }
     });
     eleventyConfig.addCollection(

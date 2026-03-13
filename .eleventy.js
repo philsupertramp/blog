@@ -73,6 +73,7 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/_includes/assets/2026-02-01/*");
 
     eleventyConfig.addPlugin(mathjaxPlugin, {
+      output: 'svg',
       tex: {
       }
     });

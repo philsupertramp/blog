@@ -1,7 +1,8 @@
 ---
 tags:
-    - post
-    - published
+- post
+- draft
+permalink: false
 date: 2026-03-11
 title: Yet Another Explanation of Machine Learning
 layout: mylayout.njk

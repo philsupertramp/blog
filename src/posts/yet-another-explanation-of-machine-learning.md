@@ -3,9 +3,11 @@ tags:
 - post
 - draft
 permalink: false
+date: 2026-03-11
 title: Yet Another Explanation of Machine Learning
 layout: mylayout.njk
 author: Philipp
+description: Something
 ---
 
 The purpose of this Multi-Part article is to introduce a novel approach for AI automation assistants as well as give an introduction to general machine learning to allow a broader audience to harvest this approach.

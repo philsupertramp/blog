@@ -281,6 +281,6 @@ this up isn't to claim that integer training is solved, it clearly isn't,
 but to document what a ground-up integer ML stack might look like, what problems it runs into, and whether
 the core assumption holds: that you can train a useful neural network without ever touching a floating point number.
 
-So far, for small problems, the answer looks like yes. Part 2 will find out how far that scales.
+So far, for small problems, the answer looks like yes. [Part 2]({{ "integers-the-theory" |  postsUrl }}) will find out how far that scales.
 
 The source code is available at [github](https://github.com/philsupertramp/integers).

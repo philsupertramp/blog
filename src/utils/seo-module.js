@@ -31,6 +31,11 @@ function generateBlogPostingSchema(page, post) {
     author: {
       '@type': 'Person',
       name: author_name,
+      url: SITE_URL,
+      sameAs: [
+        "[https://github.com/philsupertramp](https://github.com/philsupertramp)",
+        "[https://huggingface.co/philipp-zettl](https://huggingface.co/philipp-zettl)"
+      ]
     },
     publisher: {
       '@type': 'Organization',

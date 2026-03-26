@@ -1,4 +1,4 @@
-article {
+article,header {
   max-width: min(80%, 1024px);
   margin: auto;
 }

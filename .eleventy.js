@@ -40,7 +40,6 @@ module.exports = function(eleventyConfig) {
         if (postTags.length <= 0) {
           return false;
         }
-        console.log(postTags);
         // Check if there is an intersection between the tags
         return currentTags.some(tag => postTags.includes(tag));
       });

@@ -3,53 +3,153 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Thoughts, projects, tutorials and notes about software development, computer science, math and machine learning by Phil.">
 
     <meta name="google-site-verification" content="sj-k5QplzHrskEJOc9IC7Jgns_EH0AOOwAtahvT3bAY" />
 
     <title>Phil's Blog</title>
+    
+    <!-- Explicit Canonical URL for the homepage -->
+    <link rel="canonical" href="https://blog.godesteem.de{{ page.url | url }}">
+    
     <link rel="apple-touch-icon" sizes="180x180" href="{{ '/_includes/assets/apple-touch-icon.png' | url }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ '/_includes/assets/favicon-32x32.png' | url }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ '/_includes/assets/favicon-16x16.png' | url }}">
     <link rel="manifest" href="{{ '/_includes/assets/site.webmanifest' | url }}">
+    
+    <!-- Preload critical CSS -->
+    <link rel="preload" href="{{ '/_includes/assets/main.css' | url }}" as="style">
     <link rel="stylesheet" href="{{ '/_includes/assets/main.css' | url }}">
-    <style>.content{max-width: 1024px; margin: auto;}</style>
+    
+    <style>
+      .content { max-width: 1024px; margin: auto; padding: 1rem; }
+      
+      /* Terminal aesthetic for lists */
+      .terminal-list { 
+        list-style-type: none; 
+        padding-left: 0; 
+        font-family: monospace; 
+        display: flex; 
+        flex-direction: column; 
+        gap: 0.75rem; 
+      }
+      .terminal-list li { 
+        display: flex; 
+        flex-wrap: wrap; 
+        align-items: baseline; 
+        gap: 0.5rem; 
+      }
+      .post-meta { 
+        color: #666; 
+        font-size: 0.9em; 
+      }
+      .terminal-text {
+        font-family: monospace; 
+        color: #555; 
+        font-size: 0.9em; 
+        margin-bottom: 1rem;
+      }
+    </style>
+
+    <!-- Structured Data (JSON-LD) connecting your profiles -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "Phil's Blog",
+      "description": "Thoughts, projects, tutorials and notes about software development, computer science, math and machine learning.",
+      "url": "https://blog.godesteem.de{{ page.url | url }}",
+      "author": {
+        "@type": "Person",
+        "name": "Philipp",
+        "url": "https://blog.godesteem.de",
+        "sameAs": [
+          "https://github.com/philsupertramp",
+          "https://huggingface.co/philipp-zettl",
+        ]
+      }
+    }
+    </script>
   </head>
   <body>
-    <div>
-      <div class="content">
-    <h1>Phil's Blog</h1>
-    <p>Hi, I'm Phil, a software engineer, self proclaimed and certified mathematician and this is my blog. Here you can find some of my thoughts, projects, tutorials and notes about software development, computer science and other stuff.</p>
-    <hr/>
-    <h2>Publications</h2>
-    <ul>
-      <li><a href="https://github.com/philsupertramp/inet">Machine Learning Methods for Localization and Classification of Insects in Images (B.Sc. Thesis)</a> (Philipp @ 01 Apr 2022)</li>
-    </ul>
-    <hr/>
-    <h2>Posts</h2>
-    <h3>Here you can find my long-form posts, where I try to explain things in a more detailed way. Contains tutorials, project description, algorithms and theoretical content.</h3>
-    <ul>
-{%- for post in collections.published_posts -%}
-      <li><a href="{{ post.page.url | url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date | postDate }})</li>
-{%- endfor -%}
-    </ul>
-    <hr/>
-    <h2>Notes</h2>
-    <h3>A collection of short notes and thoughts, take it with a grain of salt and do your own god damn research!</h3>
-    <h4>Also, I'm not a native English speaker, so there might be some grammar mistakes. If you find them, good for you :-)</h4>
-    <ul>
-{%- for post in collections.published_notes -%}
-      <li><a href="{{ post.page.url | url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date | postDate }})</li>
-{%- endfor -%}
-    </ul>
-    <hr/>
-    <h2>Old Posts</h2>
-    <h3>Here you can find my old posts, which are not up to date anymore, but might still be interesting to read. Media content or links might be broken.</h3>
-    <ul>
-{%- for post in collections.old_posts -%}
-      <li><a href="{{ post.page.url | url }}">{{ post.data.title }}</a> ({{post.data.author}} @ {{post.data.date | postDate }})</li>
-{%- endfor -%}
-    </ul>
-      </div>
-    </div>
+    <!-- Accessibility: Skip to content link -->
+    <a href="#main-content" class="skip-link" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;">Skip to main content</a>
+    
+    <!-- Semantic wrapper: <main> instead of <div> -->
+    <main id="main-content" class="content">
+      
+      <header style="margin-bottom: 3rem; border-bottom: 2px dashed #eee; padding-bottom: 1rem;">
+        <h1>Phil's Blog</h1>
+        <p>Hi, I'm Phil, a software engineer, self proclaimed and certified mathematician and this is my blog. Here you can find some of my thoughts, projects, tutorials and notes about software development, computer science, math and machine learning.</p>
+        
+        <!-- Semantic <nav> for your external links -->
+        <nav aria-label="Author Profiles" style="font-family: monospace; margin-top: 1.5rem;">
+          <strong>>> PROFILES:</strong>
+          <a href="https://github.com/philsupertramp">GitHub</a> | 
+          <a href="https://huggingface.co/philipp-zettl">HuggingFace 🤗</a>
+        </nav>
+      </header>
+
+      <!-- Semantic <section> wrappers for your content clusters -->
+      <section aria-labelledby="publications-heading" style="margin-bottom: 3rem;">
+        <h2 id="publications-heading">Publications</h2>
+        <ul class="terminal-list">
+          <li>
+            <a href="https://github.com/philsupertramp/inet">
+              Machine Learning Methods for the Localization and Classification of Insects in Images (B. Sc. Thesis)
+            </a>
+            <span class="post-meta">(Philipp @ 01 Apr 2022)</span>
+          </li>
+        </ul>
+      </section>
+
+      <hr style="border: 0; border-top: 1px dashed #ccc; margin: 2rem 0;"/>
+
+      <section aria-labelledby="posts-heading" style="margin-bottom: 3rem;">
+        <h2 id="posts-heading">Posts</h2>
+        <!-- Fixed heading hierarchy by moving descriptions to <p> tags with terminal styling -->
+        <p class="terminal-text">>> Here you can find my long-form posts, where I try to explain things in a more detailed way. Contains tutorials, project description, algorithms and theoretical content.</p>
+        <ul class="terminal-list">
+        {%- for post in collections.published_posts -%}
+          <li>
+            <a href="{{ post.page.url | url }}">{{ post.data.title }}</a> 
+            <span class="post-meta">({{post.data.author}} @ {{post.data.date | postDate }})</span>
+          </li>
+        {%- endfor -%}
+        </ul>
+      </section>
+
+      <hr style="border: 0; border-top: 1px dashed #ccc; margin: 2rem 0;"/>
+
+      <section aria-labelledby="notes-heading" style="margin-bottom: 3rem;">
+        <h2 id="notes-heading">Notes</h2>
+        <p class="terminal-text" style="margin-bottom: 0.2rem;">>> A collection of short notes and thoughts, take it with a grain of salt and do your own god damn research!</p>
+        <p class="terminal-text">>> Also, I'm not a native English speaker, so there might be some grammar mistakes. If you find them, good for you :-)</p>
+        <ul class="terminal-list">
+        {%- for post in collections.published_notes -%}
+          <li>
+            <a href="{{ post.page.url | url }}">{{ post.data.title }}</a> 
+            <span class="post-meta">({{post.data.author}} @ {{post.data.date | postDate }})</span>
+          </li>
+        {%- endfor -%}
+        </ul>
+      </section>
+
+      <hr style="border: 0; border-top: 1px dashed #ccc; margin: 2rem 0;"/>
+
+      <section aria-labelledby="old-posts-heading" style="margin-bottom: 3rem;">
+        <h2 id="old-posts-heading">Old Posts</h2>
+        <p class="terminal-text">>> Here you can find my old posts, which are not up to date anymore, but might still be interesting to read. Media content or links might be broken.</p>
+        <ul class="terminal-list">
+        {%- for post in collections.old_posts -%}
+          <li>
+            <a href="{{ post.page.url | url }}">{{ post.data.title }}</a> 
+            <span class="post-meta">({{post.data.author}} @ {{post.data.date | postDate }})</span>
+          </li>
+        {%- endfor -%}
+        </ul>
+      </section>
+
+    </main>
   </body>
 </html>

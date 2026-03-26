@@ -2,6 +2,7 @@
 tags:
  - post
  - published
+ - integers
 title: "Integers: An integer native ML engine"
 layout: mylayout.njk
 author: Philipp

@@ -43,7 +43,16 @@ function generateBlogPostingSchema(page, post) {
       url: SITE_URL
     },
     url: `${SITE_URL}${page.url}`,
-    image: `${SITE_URL}/_includes/assets/favicon-32x32.png`
+    image: `${SITE_URL}/_includes/assets/favicon-32x32.png`,
+    isPartOf: {
+      "@type": "Blog",
+      "name": SITE_NAME,
+      "publisher": {
+        "@type": "Organization",
+        "@id": SITE_URL,
+        "name": SITE_NAME
+      }
+    }
   };
 
   // Add keywords from tags if available

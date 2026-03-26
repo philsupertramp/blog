@@ -2,6 +2,7 @@
 tags:
  - post
  - published
+ - integers
 title: "Integers: The Theory"
 layout: mylayout.njk
 author: Philipp

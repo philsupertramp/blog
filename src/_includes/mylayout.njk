@@ -42,6 +42,24 @@ title: My dope Blog
             <div itemprop="articleBody">
                 {{ content | safe }}
             </div>
+
+        {% set relatedPosts = collections.all | getRelatedPosts(page.url, tags) %}
+
+        {% if relatedPosts.length > 0 %}
+        <div style="margin-top: 4rem; padding-top: 1rem; border-top: 2px dashed #eee; font-family: monospace;">
+            <strong>>> SEE_ALSO:</strong>
+            
+            <div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                {% for post in relatedPosts %}
+                <div>
+                    <!-- Assuming formatDate is an existing 11ty filter you have -->
+                    <span style="color: #666;">{{ post.date | formatDate }}</span> | 
+                    <a href="{{ post.url | url }}">{{ post.data.title }}</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
         </article>
     </main>
 </body>

@@ -20,6 +20,35 @@ module.exports = function(eleventyConfig) {
       return `/posts/${slug}/`;
     });
 
+    //
+    eleventyConfig.addFilter("getRelatedPosts", function(collection, currentUrl, currentTags) {
+      // If the current post has no tags, return nothing
+      if (!currentTags || currentTags.length === 0) return [];
+      
+      // Filter out the current post and posts without matching tags
+      const related = collection.filter(post => {
+        if (post.url === currentUrl) return false; // Skip the current post
+        
+        const postTags = post.data.tags || [];
+        const excludes = ["post", "note", "published", "old-wiki"];
+        excludes.forEach((e) => {
+          let idx = postTags.indexOf(e);
+          if (idx > -1){
+            postTags.splice(idx, 1);
+          }
+        });
+        if (postTags.length <= 0) {
+          return false;
+        }
+        console.log(postTags);
+        // Check if there is an intersection between the tags
+        return currentTags.some(tag => postTags.includes(tag));
+      });
+
+      // Return a maximum of 3 related posts
+      return related.slice(0, 3);
+    }); 
+
     // ============ SEO FILTERS ============
     eleventyConfig.addFilter("schemaDate", (date) => {
       return new Date(date).toISOString();

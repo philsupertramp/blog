@@ -2,6 +2,7 @@
 tags:
  - post
  - published
+ - integers
 title: "Integers: Training Neural Networks Without Floating Point"
 layout: mylayout.njk
 author: Philipp

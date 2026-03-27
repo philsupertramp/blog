@@ -1,5 +1,6 @@
 ---
 title: My dope Blog
+date: "Last Modified"
 ---
 
 <!DOCTYPE html>
@@ -36,7 +37,7 @@ title: My dope Blog
                     <span itemprop="author" itemscope itemtype="http://schema.org/Person">
                         By <span itemprop="name">{{ author }}</span>
                     </span>
-                    <time itemprop="datePublished" datetime="{{ date | schemaDate }}">{{ date | formatDate }}</time>
+                    <time itemprop="datePublished" datetime="{{ date | schemaDate(page.url) }}">{{ date | formatDate(page.url) }}</time>
                 </div>
                 {% endif %}
             </header>
@@ -54,7 +55,7 @@ title: My dope Blog
                 {% for post in relatedPosts %}
                 <div>
                     <!-- Assuming formatDate is an existing 11ty filter you have -->
-                    <span style="color: #666;">{{ post.date | formatDate }}</span> | 
+                    <span style="color: #666;">{{ post.date | formatDate(page.url) }}</span> | 
                     <a href="{{ post.url | url }}">{{ post.data.title }}</a>
                 </div>
                 {% endfor %}

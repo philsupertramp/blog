@@ -4,10 +4,18 @@ eleventyExcludeFromCollections: true
 ---
 <?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    {% for page in collections.published %}
+    <url>
+      <loc>https://blog.godesteem.de/</loc>
+      <lastmod>{{ page.date.toISOString() }}</lastmod>
+    </url>
+    <url>
+      <loc>https://blog.godesteem.de/archive/</loc>
+      <lastmod>{{ page.date.toISOString() }}</lastmod>
+    </url>
+    {% for p in collections.published %}
         <url>
-            <loc>https://blog.godesteem.de{{ page.url | url }}</loc>
-            <lastmod>{{ page.date.toISOString() }}</lastmod>
+            <loc>https://blog.godesteem.de{{ p.url | url }}</loc>
+            <lastmod>{{ p.date.toISOString() }}</lastmod>
         </url>
     {% endfor %}
 </urlset>

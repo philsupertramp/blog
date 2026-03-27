@@ -2,6 +2,17 @@ const mathjaxPlugin = require("eleventy-plugin-mathjax");
 const directoryOutputPlugin = require("@11ty/eleventy-plugin-directory-output");
 const syntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
 const seoModule = require('./src/utils/seo-module');
+const fs = require('fs');
+
+function getLastModified(pageUrl) {
+  let path = `./src${pageUrl}`.replace(/.$/, ".md");
+  try {
+    date = new Date(fs.statSync(path).mtime);
+    return date;
+  }  catch (err) {
+    return new Date();
+  }
+}
 
 module.exports = function(eleventyConfig) {
     const markdown = require('./src/utils/markdown')
@@ -10,7 +21,10 @@ module.exports = function(eleventyConfig) {
 
     const { DateTime } = require("luxon");
 
-    eleventyConfig.addFilter("postDate", (dateObj) => {
+    eleventyConfig.addFilter("postDate", (dateObj, url) => {
+      if (dateObj === 'Last Modified') {
+        dateObj = getLastModified(url);
+      }
       return DateTime.fromJSDate(dateObj).toLocaleString(DateTime.DATE_MED);
     });
     eleventyConfig.addFilter("notesUrl", (slug) => {
@@ -49,7 +63,10 @@ module.exports = function(eleventyConfig) {
     }); 
 
     // ============ SEO FILTERS ============
-    eleventyConfig.addFilter("schemaDate", (date) => {
+    eleventyConfig.addFilter("schemaDate", (date, url) => {
+      if (date === 'Last Modified') {
+        date = getLastModified(url);
+      }
       return new Date(date).toISOString();
     });
 
@@ -61,7 +78,10 @@ module.exports = function(eleventyConfig) {
       return seoModule.escapeHtml(text);
     });
 
-    eleventyConfig.addFilter("formatDate", (date) => {
+    eleventyConfig.addFilter("formatDate", (date, url) => {
+      if (date === 'Last Modified') {
+        date = getLastModified(url);
+      }
       return seoModule.formatDate(date);
     });
 
@@ -82,6 +102,9 @@ module.exports = function(eleventyConfig) {
 
     eleventyConfig.addShortcode("seoMetaTags", (pageUrl, title, description, author, date) => {
       // Create a post-like object from the individual parameters
+      if(date === 'Last Modified') {
+        date = getLastModified(pageUrl);
+      }
       const post = {
         title: title || '',
         description: description || '',

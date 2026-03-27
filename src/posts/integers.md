@@ -7,7 +7,7 @@ title: "Integers: An integer native ML engine"
 layout: mylayout.njk
 author: Philipp
 description: In this post I explain how I aligned the framework with our theoretic definition.
-date: 2026-03-23
+published: 2026-03-03
 ---
 <style>
 table {border-collapse: collapse;, width: 50%} tr,table,th,td { border: 1px solid; }

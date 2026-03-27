@@ -2,6 +2,7 @@
 tags:
  - note
  - published
+ - language-models
 title: Zero-Shot-Classification
 layout: mylayout.njk
 author: Philipp

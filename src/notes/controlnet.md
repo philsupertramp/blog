@@ -2,6 +2,7 @@
 tags:
  - note
  - published
+ - imagegen
 title: "ControlNet: Controlling Diffusion Model Outputs"
 layout: mylayout.njk
 author: Philipp

@@ -2,6 +2,7 @@
 tags:
  - note
  - published
+ - imagegen
 title: Experiments with tiny-sd
 layout: mylayout.njk
 author: Philipp

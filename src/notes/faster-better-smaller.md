@@ -2,6 +2,7 @@
 tags:
  - note
  - published
+ - language-models
 title: "Faster, Better, Smaller"
 layout: mylayout.njk
 author: Philipp

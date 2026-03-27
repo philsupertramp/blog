@@ -2,6 +2,7 @@
 tags:
  - note
  - published
+ - imagegen
 title: The Wet Dream of a LoRA Explorer
 layout: mylayout.njk
 author: Philipp

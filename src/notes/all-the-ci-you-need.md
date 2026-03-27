@@ -2,6 +2,8 @@
 tags:
  - note
  - published
+ - devops
+ - automation
 title: "All the CI/CD YOUR Project needs"
 layout: mylayout.njk
 author: Philipp

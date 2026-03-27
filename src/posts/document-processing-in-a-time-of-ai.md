@@ -2,6 +2,7 @@
 tags:
  - post
  - published
+ - language-models
 title: Document Processing In The Time of Artificial Intelligence
 layout: mylayout.njk
 author: Philipp

@@ -2,6 +2,7 @@
 tags:
  - post
  - published
+ - language-models
 title: Solution driven Named Entity Recognition (NER) for helpful assistants
 layout: mylayout.njk
 author: Philipp

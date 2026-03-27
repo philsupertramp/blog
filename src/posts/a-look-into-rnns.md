@@ -2,6 +2,7 @@
 tags:
  - post
  - published
+ - language-models
 title: A Look Into RNNs
 layout: mylayout.njk
 author: Philipp

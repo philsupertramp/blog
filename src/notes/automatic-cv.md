@@ -2,6 +2,7 @@
 tags:
  - note
  - published
+ - automation
 title: "Automatic CV building"
 layout: mylayout.njk
 author: Philipp

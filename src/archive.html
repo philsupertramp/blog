@@ -74,6 +74,7 @@
   <body>
     <!-- Accessibility: Skip to content link -->
     <a href="#main-content" class="skip-link" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;">Skip to main content</a>
+    <nav aria-label="Breadcrumb"><div style="position: fixed"><a href="{{ '/' | url }}">Back</a></div></nav>
     
     <!-- Semantic wrapper: <main> instead of <div> -->
     <main id="main-content" class="content">
@@ -89,58 +90,25 @@
           <a href="https://huggingface.co/philipp-zettl">HuggingFace 🤗</a>
         </nav>
       </header>
-
-      <!-- Semantic <section> wrappers for your content clusters -->
-      <section aria-labelledby="publications-heading" style="margin-bottom: 3rem;">
-        <h2 id="publications-heading">Publications</h2>
-        <ul class="terminal-list">
-          <li>
-            <a href="https://github.com/philsupertramp/inet">
-              Machine Learning Methods for the Localization and Classification of Insects in Images (B. Sc. Thesis)
-            </a>
-            <span class="post-meta">(Philipp @ 01 Apr 2022)</span>
-          </li>
-        </ul>
-      </section>
-
-      <hr style="border: 0; border-top: 1px dashed #ccc; margin: 2rem 0;"/>
-
-      <section aria-labelledby="posts-heading" style="margin-bottom: 3rem;">
-        <h2 id="posts-heading">Posts</h2>
-        <!-- Fixed heading hierarchy by moving descriptions to <p> tags with terminal styling -->
-        <p class="terminal-text">>> Here you can find my long-form posts, where I try to explain things in a more detailed way. Contains tutorials, project description, algorithms and theoretical content.</p>
-        <ul class="terminal-list">
-        {%- for post in collections.published_posts -%}
-          <li>
-            <a href="{{ post.page.url | url }}">{{ post.data.title }}</a> 
-            <span class="post-meta">({{post.data.author}} @ {{post.data.date | postDate }})</span>
-          </li>
-        {%- endfor -%}
-        </ul>
-      </section>
-
-      <hr style="border: 0; border-top: 1px dashed #ccc; margin: 2rem 0;"/>
-
-      <section aria-labelledby="notes-heading" style="margin-bottom: 3rem;">
-        <h2 id="notes-heading">Notes</h2>
-        <p class="terminal-text" style="margin-bottom: 0.2rem;">>> A collection of short notes and thoughts, take it with a grain of salt and do your own god damn research!</p>
-        <p class="terminal-text">>> Also, I'm not a native English speaker, so there might be some grammar mistakes. If you find them, good for you :-)</p>
-        <ul class="terminal-list">
-        {%- for post in collections.published_notes -%}
-          <li>
-            <a href="{{ post.page.url | url }}">{{ post.data.title }}</a> 
-            <span class="post-meta">({{post.data.author}} @ {{post.data.date | postDate }})</span>
-          </li>
-        {%- endfor -%}
-        </ul>
-      </section>
-
-      <hr style="border: 0; border-top: 1px dashed #ccc; margin: 2rem 0;"/>
-
       <section aria-labelledby="old-posts-heading" style="margin-bottom: 3rem;">
-        <h2 id="old-posts-heading"><a href="/archive">Post Archive</a></h2>
+        <h2 id="old-posts-heading">Archive</h2>
+
+        <p class="terminal-text">>> Here you can find my old posts, which are not up to date anymore, but might still be interesting to read. Media content or links might be broken.</p>
+        <ul class="terminal-list">
+        {%- for post in collections.old_posts -%}
+          <li>
+            <a href="{{ post.page.url | url }}">{{ post.data.title }}</a> 
+            <span class="post-meta">({{post.data.author}} @ {{post.data.date | postDate }})</span>
+          </li>
+        {%- endfor -%}
+        </ul>
+
+
       </section>
 
     </main>
   </body>
 </html>
+
+
+

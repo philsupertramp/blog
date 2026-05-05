@@ -107,7 +107,15 @@ To do so, we need to
 We can verify that no more networks are up and running via
 ```shell
 > docker network ls
+
+NETWORK ID     NAME      DRIVER    SCOPE
+d5240902a409   bridge    bridge    local
+013b99839df3   host      host      local
+8357d5fa2434   none      null      local
 ```
+
+{% note "It's normal to see the bridge, host and null networks here." %}
+
 
 and then finally restart the daemon with the system manager of your choice
 ```

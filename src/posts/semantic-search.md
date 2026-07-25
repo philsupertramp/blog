@@ -3,6 +3,7 @@ tags:
  - post
  - published
  - semantic search
+ - language-models
  - ml
 title: "Fine-Tuning Micro Embedding Models for Domain-Specific Semantic Search"
 layout: mylayout.njk

@@ -1,0 +1,438 @@
+{
+  "meta": {
+    "width": 596.0,
+    "height": 842.0
+  },
+  "elements": [
+    {
+      "text": "PDF is essentially a container that describes a document's layout and content in a way that ",
+      "type": "text",
+      "bbox": [
+        72.0,
+        74.1,
+        520.6,
+        85.1
+      ]
+    },
+    {
+      "text": "can be understood by any device that can read the file. This ensures that the document is ",
+      "type": "text",
+      "bbox": [
+        72.0,
+        88.6,
+        513.7,
+        99.6
+      ]
+    },
+    {
+      "text": "represented in the same way on any kind of device. This PDF container contains objects like ",
+      "type": "text",
+      "bbox": [
+        72.0,
+        103.2,
+        527.7,
+        114.2
+      ]
+    },
+    {
+      "text": "pages, fonts, images and other metadata, that all get cross-referenced/linked together within ",
+      "type": "text",
+      "bbox": [
+        72.0,
+        117.7,
+        527.1,
+        128.7
+      ]
+    },
+    {
+      "text": "a table. By reading the table and creating relationships between objects we can recreate the ",
+      "type": "text",
+      "bbox": [
+        72.0,
+        132.3,
+        525.9,
+        143.3
+      ]
+    },
+    {
+      "text": "document.Here's an overview of content types we might find inside a PDF file ",
+      "type": "text",
+      "bbox": [
+        72.0,
+        146.8,
+        454.6,
+        157.8
+      ]
+    },
+    {
+      "text": "Category Examples ",
+      "type": "text",
+      "bbox": [
+        125.4,
+        178.6,
+        395.3,
+        189.6
+      ]
+    },
+    {
+      "text": "Text content Streams with font references, character codes ",
+      "type": "text",
+      "bbox": [
+        77.2,
+        206.3,
+        462.6,
+        217.3
+      ]
+    },
+    {
+      "text": "Vector graphics Shapes, lines, bezier paths ",
+      "type": "text",
+      "bbox": [
+        77.2,
+        234.1,
+        370.3,
+        245.1
+      ]
+    },
+    {
+      "text": "Images Raster data (JPEG, JPEG2000, CCITT, etc.) ",
+      "type": "text",
+      "bbox": [
+        77.2,
+        261.8,
+        454.6,
+        272.8
+      ]
+    },
+    {
+      "text": "Fonts Embedded or referenced ",
+      "type": "text",
+      "bbox": [
+        77.2,
+        289.6,
+        360.0,
+        300.6
+      ]
+    },
+    {
+      "text": "Metadata Info dict, XMP XML ",
+      "type": "text",
+      "bbox": [
+        77.2,
+        317.3,
+        332.4,
+        328.3
+      ]
+    },
+    {
+      "text": "Interactive content Forms, annotations, links ",
+      "type": "text",
+      "bbox": [
+        77.2,
+        345.1,
+        360.5,
+        356.1
+      ]
+    },
+    {
+      "text": "Structure / Tags Logical document structure for accessibility ",
+      "type": "text",
+      "bbox": [
+        77.2,
+        372.8,
+        447.9,
+        383.8
+      ]
+    },
+    {
+      "text": "Embedded attachments PDFs, images, or arbitrary files ",
+      "type": "text",
+      "bbox": [
+        77.2,
+        400.6,
+        389.2,
+        411.6
+      ]
+    },
+    {
+      "text": "Scripts / Actions JavaScript actions (rare, used in forms) ",
+      "type": "text",
+      "bbox": [
+        77.2,
+        428.3,
+        429.6,
+        439.3
+      ]
+    },
+    {
+      "text": " ",
+      "type": "text",
+      "bbox": [
+        72.0,
+        450.8,
+        78.6,
+        461.8
+      ]
+    },
+    {
+      "text": " ",
+      "type": "text",
+      "bbox": [
+        72.0,
+        465.4,
+        78.6,
+        476.4
+      ]
+    },
+    {
+      "text": "Let\u2019s also add an image here: ",
+      "type": "text",
+      "bbox": [
+        72.0,
+        479.9,
+        222.6,
+        490.9
+      ]
+    },
+    {
+      "text": " ",
+      "type": "text",
+      "bbox": [
+        315.0,
+        725.7,
+        321.6,
+        736.7
+      ]
+    },
+    {
+      "text": "",
+      "type": "text",
+      "bbox": [
+        73.5,
+        493.9,
+        313.5,
+        733.9
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        0.0,
+        0.0,
+        595.5,
+        842.2
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        72.0,
+        171.3,
+        226.5,
+        196.3
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        226.5,
+        171.3,
+        499.5,
+        196.3
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        72.0,
+        199.0,
+        226.5,
+        224.1
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        226.5,
+        199.0,
+        499.5,
+        224.1
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        72.0,
+        226.8,
+        226.5,
+        251.8
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        226.5,
+        226.8,
+        499.5,
+        251.8
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        72.0,
+        254.5,
+        226.5,
+        279.6
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        226.5,
+        254.5,
+        499.5,
+        279.6
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        72.0,
+        282.3,
+        226.5,
+        307.3
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        226.5,
+        282.3,
+        499.5,
+        307.3
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        72.0,
+        310.0,
+        226.5,
+        335.1
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        226.5,
+        310.0,
+        499.5,
+        335.1
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        72.0,
+        337.8,
+        226.5,
+        362.8
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        226.5,
+        337.8,
+        499.5,
+        362.8
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        72.0,
+        365.5,
+        226.5,
+        390.6
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        226.5,
+        365.5,
+        499.5,
+        390.6
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        72.0,
+        393.3,
+        226.5,
+        418.3
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        226.5,
+        393.3,
+        499.5,
+        418.3
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        72.0,
+        421.0,
+        226.5,
+        446.1
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        226.5,
+        421.0,
+        499.5,
+        446.1
+      ]
+    },
+    {
+      "text": "",
+      "type": "rect",
+      "bbox": [
+        73.5,
+        493.9,
+        313.5,
+        733.9
+      ]
+    }
+  ]
+}

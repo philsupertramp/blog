@@ -1,0 +1,203 @@
+{
+  "metadata": {
+    "filename": "./test-pdf.qdf.pdf",
+    "page_dimensions": {
+      "width": 595,
+      "height": 892
+    },
+    "coordinate_system": "top-left",
+    "units": "pdf_points"
+  },
+  "content": {
+    "images": [],
+    "text_blocks": [],
+    "tables": [
+      {
+        "description": "Inferred table region based on vector graphics",
+        "associated_vectors": 22,
+        "contained_text": [
+          {
+            "text": " ",
+            "bbox": [
+              315.0,
+              158.1,
+              321.6,
+              0
+            ]
+          },
+          {
+            "text": "?et’? a??? a?? a? i?a?e ?ere: ",
+            "bbox": [
+              72.0,
+              403.8,
+              222.6,
+              -11.0
+            ]
+          },
+          {
+            "text": " ",
+            "bbox": [
+              72.0,
+              418.4,
+              78.6,
+              -11.0
+            ]
+          },
+          {
+            "text": " ",
+            "bbox": [
+              72.0,
+              432.9,
+              78.6,
+              -11.0
+            ]
+          },
+          {
+            "text": "?cri?t? / Acti??? ?a?a?cri?t acti??? ?rare? ??e? i? ??r??? ",
+            "bbox": [
+              77.2,
+              455.4,
+              429.6,
+              -11.0
+            ]
+          },
+          {
+            "text": "???e??e? attac??e?t? P???? i?a?e?? ?r ar?itrar? ?i?e? ",
+            "bbox": [
+              77.2,
+              483.2,
+              389.2,
+              -11.0
+            ]
+          },
+          {
+            "text": "?tr?ct?re / ?a?? ???ica? ??c??e?t ?tr?ct?re ??r acce??i?i?it? ",
+            "bbox": [
+              77.2,
+              510.9,
+              447.9,
+              -11.0
+            ]
+          },
+          {
+            "text": "I?teracti?e c??te?t ??r??? a???tati???? ?i??? ",
+            "bbox": [
+              77.2,
+              538.7,
+              360.5,
+              -11.0
+            ]
+          },
+          {
+            "text": "Meta?ata I??? ?ict? XMP XM? ",
+            "bbox": [
+              77.2,
+              566.4,
+              332.4,
+              -11.0
+            ]
+          },
+          {
+            "text": "???t? ???e??e? ?r re?ere?ce? ",
+            "bbox": [
+              77.2,
+              594.2,
+              360.0,
+              -11.0
+            ]
+          },
+          {
+            "text": "I?a?e? ?a?ter ?ata ??P??? ?P??2???? CCI??? etc?? ",
+            "bbox": [
+              77.2,
+              621.9,
+              454.6,
+              -11.0
+            ]
+          },
+          {
+            "text": "Vect?r ?ra??ic? ??a?e?? ?i?e?? ?e?ier ?at?? ",
+            "bbox": [
+              77.2,
+              649.7,
+              370.3,
+              -11.0
+            ]
+          },
+          {
+            "text": "?e?t c??te?t ?trea?? ?it? ???t re?ere?ce?? c?aracter c??e? ",
+            "bbox": [
+              77.2,
+              677.4,
+              462.6,
+              -11.0
+            ]
+          },
+          {
+            "text": "Cate??r? ??a???e? ",
+            "bbox": [
+              125.4,
+              705.2,
+              395.3,
+              -11.0
+            ]
+          },
+          {
+            "text": "??c??e?t??ere?? a? ??er?ie? ?? c??te?t t??e? ?e ?i??t ?i?? i??i?e a P?? ?i?e ",
+            "bbox": [
+              72.0,
+              737.0,
+              454.6,
+              -11.0
+            ]
+          },
+          {
+            "text": "a ta??e? ?? rea?i?? t?e ta??e a?? creati?? re?ati????i?? ?et?ee? ???ect? ?e ca? recreate t?e ",
+            "bbox": [
+              72.0,
+              751.5,
+              525.9,
+              -11.0
+            ]
+          },
+          {
+            "text": "?a?e?? ???t?? i?a?e? a?? ?t?er ?eta?ata? t?at a?? ?et cr????re?ere?ce?/?i??e? t??et?er ?it?i? ",
+            "bbox": [
+              72.0,
+              766.0,
+              527.1,
+              -11.0
+            ]
+          },
+          {
+            "text": "re?re?e?te? i? t?e ?a?e ?a? ?? a?? ?i?? ?? ?e?ice? ??i? P?? c??tai?er c??tai?? ???ect? ?i?e ",
+            "bbox": [
+              72.0,
+              780.6,
+              527.7,
+              -11.0
+            ]
+          },
+          {
+            "text": "ca? ?e ???er?t??? ?? a?? ?e?ice t?at ca? rea? t?e ?i?e? ??i? e???re? t?at t?e ??c??e?t i? ",
+            "bbox": [
+              72.0,
+              795.1,
+              513.7,
+              -11.0
+            ]
+          },
+          {
+            "text": "P?? i? e??e?tia??? a c??tai?er t?at ?e?cri?e? a ??c??e?t?? ?a???t a?? c??te?t i? a ?a? t?at ",
+            "bbox": [
+              72.0,
+              809.7,
+              520.6,
+              -11.0
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

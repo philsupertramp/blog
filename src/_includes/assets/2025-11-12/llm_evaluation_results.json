@@ -1,0 +1,50 @@
+[
+  {
+    "id": "./green-on-green.pdf_p1_spatial",
+    "type": "spatial_reasoning",
+    "method_a": {
+      "response": "The image is located **below** the table.",
+      "score": 0.12195121951219512
+    },
+    "method_b": {
+      "response": "Below",
+      "score": 1.0
+    }
+  },
+  {
+    "id": "./green-on-green.pdf_p1_hallucination",
+    "type": "negative_constraint",
+    "method_a": {
+      "response": "PDF",
+      "score": 1.0
+    },
+    "method_b": {
+      "response": "PDF is essentially a container that describes a document's layout and content in a way that",
+      "score": 0.03296703296703296
+    }
+  },
+  {
+    "id": "./green-on-green.pdf_p1_resolution",
+    "type": "small_text_extraction",
+    "method_a": {
+      "response": "Here's the precise text located at the coordinates [72, 753, 223, 765]:\n\n**Forms, annotations, links**",
+      "score": 0.18811881188118806
+    },
+    "method_b": {
+      "response": "And some text at the bottom",
+      "score": 1.0
+    }
+  },
+  {
+    "id": "./green-on-green.pdf_p1_table_logic",
+    "type": "table_row_retrieval",
+    "method_a": {
+      "response": "Here's the row where 'Category' is 'Vector graphics' and its corresponding values:\n\n*   **Category:** Vector graphics\n*   **Examples:** Shapes, lines, bezier paths",
+      "score": 0.2721518987341772
+    },
+    "method_b": {
+      "response": "| Category | Examples |\n| --- | --- |\n| Vector graphics | Shapes, lines, bezier paths |",
+      "score": 0.5632183908045977
+    }
+  }
+]

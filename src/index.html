@@ -121,6 +121,25 @@
 
       <hr style="border: 0; border-top: 1px dashed #ccc; margin: 2rem 0;"/>
 
+      <!-- A dedicated home for transparently AI-assisted posts. -->
+      <section aria-labelledby="ai-writing-heading" id="ai-writing" style="margin-bottom: 3rem;">
+        <h2 id="ai-writing-heading">The Slop Lab — AI-assisted posts</h2>
+        <p class="terminal-text">>> These posts were developed with an AI writing assistant. The experiments and editorial choices are human-led; the prose may be machine-generated. Expect slop, check the links and verify anything technical.</p>
+        <p class="terminal-text">>> A small disclosure appears on every article. It identifies AI-assisted posts explicitly rather than making that claim about older writing with unknown provenance.</p>
+        <ul class="terminal-list">
+        {%- for post in collections.published_posts -%}
+          {%- if 'ai-assisted' in post.data.tags -%}
+          <li>
+            <a href="{{ post.page.url | url }}">{{ post.data.title }}</a>
+            <span class="post-meta">({{post.data.author}} @ {{post.data.date | postDate }})</span>
+          </li>
+          {%- endif -%}
+        {%- endfor -%}
+        </ul>
+      </section>
+
+      <hr style="border: 0; border-top: 1px dashed #ccc; margin: 2rem 0;"/>
+
       <section aria-labelledby="notes-heading" style="margin-bottom: 3rem;">
         <h2 id="notes-heading">Notes</h2>
         <p class="terminal-text" style="margin-bottom: 0.2rem;">>> A collection of short notes and thoughts, take it with a grain of salt and do your own god damn research!</p>

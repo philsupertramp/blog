@@ -24,7 +24,7 @@ date: "Last Modified"
     <noscript><link rel="stylesheet" href="{{ '/_includes/assets/prism-one-light.css' | url}}"></noscript>
 
 </head>
-<body>
+<body class="post-page">
     <a href="#main-content" class="skip-link" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;">Skip to main content</a>
     <nav aria-label="Breadcrumb"><div style="position: fixed"><a href="{{ '/' | url }}">Back</a></div></nav>
 
@@ -64,5 +64,16 @@ date: "Last Modified"
         {% endif %}
         </article>
     </main>
+    <aside class="ai-disclosure" role="note" aria-label="AI writing disclosure">
+      <span class="ai-disclosure__label">AI / WRITING NOTE</span>
+      <span>
+        {% if ai_assisted %}
+          This post was written with AI assistance — expect slop. Verify the claims.
+        {% else %}
+          Some posts here are AI-assisted — expect slop. Verify the claims.
+        {% endif %}
+      </span>
+      <a href="/#ai-writing">About AI-written posts</a>
+    </aside>
 </body>
 </html>

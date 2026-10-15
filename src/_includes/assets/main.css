@@ -140,3 +140,49 @@ mjx-container > mjx-assistive-mml {
 
 /* You can easily add .markdown-alert-tip, .markdown-alert-caution, etc., 
    using the same pattern and mapping to the root variables above. */
+
+
+/* Site-wide writing disclosure on content pages. No JS or dismiss-state. */
+.post-page {
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+}
+.ai-disclosure {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 50;
+  box-sizing: border-box;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.6rem;
+  padding: 0.55rem 1rem calc(0.55rem + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid #dedede;
+  background: rgba(250, 250, 250, 0.96);
+  color: #555;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.025);
+  font: 0.77rem/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  text-align: center;
+}
+.ai-disclosure__label {
+  color: #333;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+}
+.ai-disclosure a {
+  color: #444;
+  text-underline-offset: 0.2em;
+}
+.ai-disclosure a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+@media (max-width: 560px) {
+  .post-page {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+@media print {
+  .post-page { padding-bottom: 0; }
+  .ai-disclosure { display: none; }
+}

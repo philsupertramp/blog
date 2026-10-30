@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b111b" />
+  <meta name="description" content="Selected engineering projects and experiments by PhilSupertramp: integer-only machine learning, distributed training, developer tooling, and model serving." />
+  <link rel="canonical" href="https://blog.godesteem.de/portfolio/" />
+  <title>PhilSupertramp · Projects &amp; Experiments</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b111b; --panel:#121d2a; --line:#273745; --text:#e7f3ef; --muted:#afc1c1; --green:#85dfc1; --gold:#f4ca8b; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--text); background: radial-gradient(circle at 80% 0,#173a38 0,transparent 37%),var(--bg); font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; line-height:1.65; }
+    a { color:var(--green); text-decoration-thickness:1px; text-underline-offset:.2em; }
+    a:hover { color:#bcffec; }
+    a:focus-visible { outline:3px solid var(--gold); outline-offset:4px; }
+    .wrap { width:min(1080px,calc(100% - 40px)); margin:auto; }
+    .skip { position:absolute; left:-9999px; top:10px; background:var(--gold); color:#111; padding:8px; z-index:5; }
+    .skip:focus { left:10px; }
+    header { border-bottom:1px solid var(--line); }
+    header .wrap { display:flex; justify-content:space-between; align-items:center; padding:18px 0; gap:16px; }
+    .brand { font-weight:750; letter-spacing:-.02em; color:var(--text); text-decoration:none; }
+    nav { display:flex; gap:20px; flex-wrap:wrap; }
+    nav a { font-size:.92rem; text-decoration:none; color:var(--muted); }
+    nav a[aria-current="page"] { color:var(--green); }
+    .eyebrow,.prompt,.label,.mini,footer { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .prompt,.eyebrow { color:var(--green); }
+    .hero { padding:95px 0 72px; max-width:780px; }
+    .hero h1 { margin:.2em 0; font-size:clamp(2.8rem,8vw,5.6rem); line-height:1.07; letter-spacing:-.06em; }
+    .hero h1 span { color:var(--green); }
+    .lead { font-size:clamp(1.1rem,2.3vw,1.35rem); color:var(--muted); max-width:690px; }
+    .actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:32px; }
+    .button { display:inline-flex; align-items:center; border:1px solid var(--line); padding:11px 18px; text-decoration:none; border-radius:9px; font-size:.93rem; font-weight:650; }
+    .button.primary { background:var(--green); color:#08131b; border-color:var(--green); }
+    .button.primary:hover { background:#b5fbe6; }
+    .button.secondary { color:var(--text); background:#14242a; }
+    .section { padding:35px 0 72px; }
+    h2 { font-size:clamp(1.7rem,4vw,2.4rem); letter-spacing:-.035em; margin:10px 0 10px; }
+    .section-intro { color:var(--muted); margin:0 0 28px; max-width:700px; }
+    .cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+    .card { display:flex; flex-direction:column; min-height:280px; border:1px solid var(--line); background:linear-gradient(150deg,#14242a,#101927); border-radius:15px; padding:26px; }
+    .card:hover { border-color:#4b827c; transform:translateY(-1px); transition:transform .15s ease,border-color .15s ease; }
+    .card .index { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; color:var(--green); font-size:.85rem; }
+    .card h3 { font-size:1.5rem; letter-spacing:-.025em; margin:14px 0 2px; }
+    .card p { color:var(--muted); margin:10px 0; }
+    .card a { margin-top:auto; font-weight:650; width:fit-content; }
+    .tags { display:flex; gap:6px; flex-wrap:wrap; margin:14px 0 24px; }
+    .tag { display:inline-block; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.7rem; color:#bcd8d4; border:1px solid #33515b; border-radius:5px; padding:3px 7px; }
+    .note { color:var(--gold); font-size:.84rem; }
+    .lower { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(240px,.8fr); gap:40px; }
+    .lower p { color:var(--muted); }
+    ul.archive { padding-left:1.1em; }
+    ul.archive li { margin:13px 0; }
+    ul.archive span { color:var(--muted); }
+    .info { border-left:2px solid #36776f; padding:0 0 0 20px; }
+    .callout { margin:28px 0 84px; border:1px solid var(--line); border-radius:16px; padding:32px; background:#111e28; }
+    .callout p { color:var(--muted); max-width:650px; }
+    footer { padding:20px 0 40px; color:#91a6ac; border-top:1px solid var(--line); font-size:.83rem; }
+    @media (max-width:720px) { .cards,.lower{grid-template-columns:1fr;} .hero{padding:58px 0 45px;} .section{padding:25px 0 48px;} header .wrap{align-items:flex-start;} nav{gap:10px 16px;} }
+    @media (prefers-reduced-motion:reduce) { html{scroll-behavior:auto;} .card:hover{transform:none;transition:none;} }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to main content</a>
+  <header>
+    <div class="wrap">
+      <a class="brand" href="https://blog.godesteem.de/">phil@localhost</a>
+      <nav aria-label="Primary">
+        <a href="#projects" aria-current="page">Projects</a>
+        <a href="#background">Background</a>
+        <a href="https://blog.godesteem.de/">Writing</a>
+        <a href="https://github.com/philsupertramp">GitHub</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="wrap">
+    <section class="hero" aria-labelledby="intro-title">
+      <p class="prompt">$ cat ~/about.txt</p>
+      <h1 id="intro-title">Build. Experiment.<br/><span>Understand.</span></h1>
+      <p class="lead">I'm PhilSupertramp, a software engineer with a mathematics background. I work at the intersection of machine learning, numerical computing, and backend infrastructure — usually by building things to understand them.</p>
+      <div class="actions">
+        <a class="button primary" href="#projects">Explore selected projects</a>
+        <a class="button secondary" href="https://github.com/philsupertramp">View GitHub profile</a>
+      </div>
+    </section>
+
+    <section class="section" id="projects" aria-labelledby="projects-heading">
+      <p class="eyebrow">$ ls -la ~/projects/featured</p>
+      <h2 id="projects-heading">Selected engineering work</h2>
+      <p class="section-intro">A curated set of research projects and developer tools. They illustrate the problems I enjoy working on — not a claim that every project is production-ready.</p>
+      <div class="cards">
+        <article class="card">
+          <span class="index">01 / numerical ML</span>
+          <h3>integers</h3>
+          <p><strong>The question:</strong> How far can we train neural networks with integer arithmetic, rather than only quantizing them after training?</p>
+          <p>A Rust experiment with fixed-point representations, explicit scaling, stochastic rounding, and numerical correctness work.</p>
+          <div class="tags"><span class="tag">Rust</span><span class="tag">Neural networks</span><span class="tag">Numerical methods</span></div>
+          <p class="note">Experimental; actively evolving</p>
+          <a href="https://github.com/philsupertramp/integers">Explore repository →</a>
+        </article>
+        <article class="card">
+          <span class="index">02 / distributed ML</span>
+          <h3>learn-dis</h3>
+          <p><strong>The question:</strong> Can distributed learning experiments be simple to run, inspect, and extend?</p>
+          <p>Python infrastructure for federated training with client/server execution, dataset sharding, persistent work queues, and FedAvg aggregation.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">Federated learning</span></div>
+          <a href="https://github.com/learn-dis/learn-dis">Explore repository →</a>
+        </article>
+        <article class="card">
+          <span class="index">03 / developer tooling</span>
+          <h3>chain-smoker</h3>
+          <p><strong>The problem:</strong> API behavior regresses, while the scenarios that originally mattered disappear from memory.</p>
+          <p>A smoke-testing toolkit with declarative cases and a proxy-assisted workflow for recording request/response examples.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">API testing</span><span class="tag">Automation</span></div>
+          <a href="https://github.com/philsupertramp/chain-smoker">Explore repository →</a>
+        </article>
+        <article class="card">
+          <span class="index">04 / model serving</span>
+          <h3>factory</h3>
+          <p><strong>The problem:</strong> Exposing different generative model tasks through one consistent API is harder than it sounds.</p>
+          <p>Experiments with a unified serving interface across text, speech, and image model pipelines, including PyTorch and ONNX workflows.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">Inference</span><span class="tag">APIs</span></div>
+          <a href="https://github.com/philsupertramp/factory">Explore repository →</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section lower" id="background" aria-labelledby="background-heading">
+      <div>
+        <p class="eyebrow">$ cat ~/background.md</p>
+        <h2 id="background-heading">Beyond the code</h2>
+        <p>My background is in mathematics and software engineering. For my B.Sc. thesis, I investigated machine-learning methods for localizing and classifying insects in images. In 2023 I taught an introductory machine-learning class at Berliner Hochschule für Technik.</p>
+        <p>I'm interested in the seam between theory and implementation: why an algorithm works, how it behaves numerically, and what it takes to run reliably in a real system.</p>
+        <p><a href="https://github.com/philsupertramp/philsupertramp/releases/latest/download/cv.pdf">Read my CV</a> · <a href="https://huggingface.co/philipp-zettl">Hugging Face</a></p>
+      </div>
+      <div class="info">
+        <p class="eyebrow">$ ls ~/archive</p>
+        <h2>Other work</h2>
+        <ul class="archive">
+          <li><a href="https://github.com/philsupertramp/inet">Insect ML thesis</a> <span>— computer vision research</span></li>
+          <li><a href="https://github.com/philsupertramp/game-math">game-math</a> <span>— mathematical utilities</span></li>
+          <li><a href="https://github.com/philsupertramp/django-data-migration">django-data-migration</a> <span>— Django tooling</span></li>
+          <li><a href="https://github.com/philsupertramp/docr">docr</a> <span>— Docker Compose helpers</span></li>
+        </ul>
+        <p>More experiments live on <a href="https://github.com/philsupertramp?tab=repositories">GitHub</a>.</p>
+      </div>
+    </section>
+
+    <section class="callout" aria-labelledby="contact-heading">
+      <p class="prompt">$ echo $CONTACT</p>
+      <h2 id="contact-heading">Let's talk engineering.</h2>
+      <p>Interested in machine learning systems, Rust, infrastructure, or open-source development? I'm happy to exchange ideas about the work.</p>
+      <div class="actions">
+        <a class="button primary" href="mailto:philipp@godesteem.de">Send an email</a>
+        <a class="button secondary" href="https://blog.godesteem.de/">Read engineering notes</a>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap">PhilSupertramp · Built with HTML and CSS · <a href="https://github.com/philsupertramp">GitHub</a></div></footer>
+</body>
+</html>
